@@ -3,7 +3,7 @@
 window.addEventListener('load', () => {
   const pl = document.getElementById('preloader');
   pl.classList.add('done');
-  setTimeout(() => { pl.style.display = 'none'; }, 2500);
+  setTimeout(() => { pl.style.display = 'none'; }, 2850);
 });
 
 // CURSOR
