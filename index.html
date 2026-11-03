@@ -1052,6 +1052,77 @@ document.querySelectorAll('.cform .ff').forEach((field, i) => {
   mk(new THREE.TorusKnotGeometry(.8, .2, 90, 10), 0, -17, -6, 1.2, .18);
   mk(new THREE.IcosahedronGeometry(1, 0), 7, -20, -4, 1.8, .2);
 
+  // ---- FLOATING CONTROLLER GLYPHS (X, circle, triangle, square) in background ----
+  const rawM = { x: -9999, y: -9999 };
+  addEventListener('mousemove', e => { rawM.x = e.clientX; rawM.y = e.clientY; });
+  document.addEventListener('mouseleave', () => { rawM.x = rawM.y = -9999; });
+  const gRR = (p, w, h, r) => { const x = -w / 2, y = -h / 2; p.moveTo(x + r, y); p.lineTo(x + w - r, y); p.quadraticCurveTo(x + w, y, x + w, y + r); p.lineTo(x + w, y + h - r); p.quadraticCurveTo(x + w, y + h, x + w - r, y + h); p.lineTo(x + r, y + h); p.quadraticCurveTo(x, y + h, x, y + h - r); p.lineTo(x, y + r); p.quadraticCurveTo(x, y, x + r, y); return p; };
+  const GVS = 'varying vec3 vN; varying vec3 vV; void main(){ vec4 mv = modelViewMatrix*vec4(position,1.0); vN = normalize(normalMatrix*normal); vV = -mv.xyz; gl_Position = projectionMatrix*mv; }';
+  const GFS = `
+uniform vec3 uColor; uniform vec2 uMouse; uniform vec2 uCenter; uniform float uGlow; uniform float uRadius; uniform float uTime;
+varying vec3 vN; varying vec3 vV;
+float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
+void main(){
+  vec3 n = normalize(vN), v = normalize(vV);
+  float fres = pow(1.0 - max(dot(n, v), 0.0), 2.0);
+  float dist = distance(gl_FragCoord.xy, uMouse);
+  float spot = (1.0 - smoothstep(0.0, uRadius, dist)) * uGlow;
+  vec2 dir = uMouse - uCenter;
+  float pol = sin(atan(dir.y, dir.x));
+  vec3 col = uColor * 0.45 + uColor * (fres * (0.4 + 1.6 * uGlow) + spot * 1.2);
+  float gn = hash(floor(gl_FragCoord.xy * 0.5) + floor(uTime * 12.0));
+  float ns = spot * 0.45;
+  col = mix(col, vec3(1.0), max(pol, 0.0) * gn * ns);
+  col = mix(col, vec3(0.0), max(-pol, 0.0) * (1.0 - gn) * ns);
+  gl_FragColor = vec4(col, 1.0);
+}`;
+  const GOPT = { depth: .28, bevelEnabled: true, bevelThickness: .08, bevelSize: .06, bevelSegments: 3, curveSegments: 24 };
+  function glyphGeo(k) {
+    const extr = s => { const g = new THREE.ExtrudeGeometry(s, GOPT); g.center(); return g; };
+    if (k === 'circle') { const s = new THREE.Shape(); s.absarc(0, 0, 1, 0, Math.PI * 2, false); const h = new THREE.Path(); h.absarc(0, 0, .7, 0, Math.PI * 2, true); s.holes.push(h); return extr(s); }
+    if (k === 'square') { const s = gRR(new THREE.Shape(), 1.7, 1.7, .22); s.holes.push(gRR(new THREE.Path(), 1.2, 1.2, .1)); return extr(s); }
+    if (k === 'tri') { const s = new THREE.Shape(); s.moveTo(0, 1.05); s.lineTo(.95, -.6); s.lineTo(-.95, -.6); s.closePath(); const h = new THREE.Path(); h.moveTo(0, .6); h.lineTo(.5, -.38); h.lineTo(-.5, -.38); h.closePath(); s.holes.push(h); return extr(s); }
+    return extr(gRR(new THREE.Shape(), 2.1, .5, .12));
+  }
+  const GLYPHS = [
+    { k: 'cross', c: 0xFF0043, p: [-7, 4, -2] },
+    { k: 'circle', c: 0xFFD9DF, p: [6, 1.5, -3] },
+    { k: 'tri', c: 0xFF9A3D, p: [-4.5, -6, -2.5] },
+    { k: 'square', c: 0x9B5CFF, p: [7, -9, -3] },
+    { k: 'circle', c: 0xFF6A88, p: [-6.5, -14, -3.5] },
+    { k: 'cross', c: 0xFF7A1A, p: [5.5, -19, -2.5] }
+  ];
+  const glyphs = GLYPHS.map((d, i) => {
+    const grp = new THREE.Group();
+    const mat = new THREE.ShaderMaterial({ uniforms: { uColor: { value: new THREE.Color(d.c) }, uMouse: { value: new THREE.Vector2(-999, -999) }, uCenter: { value: new THREE.Vector2() }, uGlow: { value: 0 }, uRadius: { value: 80 }, uTime: { value: 0 } }, vertexShader: GVS, fragmentShader: GFS });
+    if (d.k === 'cross') { const g = glyphGeo('cross'); [Math.PI / 4, -Math.PI / 4].forEach(a => { const m = new THREE.Mesh(g, mat); m.rotation.z = a; grp.add(m); }); }
+    else grp.add(new THREE.Mesh(glyphGeo(d.k), mat));
+    grp.scale.setScalar(1.1); aS.add(grp);
+    return { grp, mat, base: new THREE.Vector3(...d.p), off: new THREE.Vector2(), glow: 0, seed: i * 1.7 };
+  });
+  const gTmp = new THREE.Vector3();
+  function updateGlyphs(t) {
+    const pr = aR.getPixelRatio();
+    glyphs.forEach(g => {
+      g.grp.position.set(g.base.x + g.off.x, g.base.y + g.off.y + Math.sin(t * .8 + g.seed) * .25, g.base.z);
+      g.grp.rotation.set(Math.sin(t * .5 + g.seed) * .3, t * .3 + g.seed, Math.cos(t * .4 + g.seed) * .2);
+      gTmp.copy(g.grp.position).project(aC);
+      const sx = (gTmp.x + 1) / 2 * innerWidth, sy = (1 - gTmp.y) / 2 * innerHeight;
+      const dx = sx - rawM.x, dy = sy - rawM.y, d = Math.hypot(dx, dy);
+      let p = Math.max(0, 1 - d / 320); p *= p;
+      // deflect away from cursor
+      const k = d > 0 ? p * 2.6 / d : 0;
+      g.off.x += (dx * k - g.off.x) * .08;
+      g.off.y += (-dy * k - g.off.y) * .08;
+      g.glow += (p - g.glow) * .1;
+      g.mat.uniforms.uMouse.value.set(rawM.x * pr, (innerHeight - rawM.y) * pr);
+      g.mat.uniforms.uCenter.value.set(sx * pr, (innerHeight - sy) * pr);
+      g.mat.uniforms.uGlow.value = g.glow;
+      g.mat.uniforms.uRadius.value = (80 + 220 * g.glow) * pr;
+      g.mat.uniforms.uTime.value = t;
+    });
+  }
+
   // ---- CARD SCENES (built lazily on first hover) ----
   const ring = (r, c, o) => new THREE.Mesh(new THREE.TorusGeometry(r, .012, 8, 160), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: o }));
   const dust = (n, r, c, s) => {
@@ -1138,6 +1209,7 @@ document.querySelectorAll('.cform .ff').forEach((field, i) => {
     for (let k = 0; k < pos.length; k += 3) pos[k + 1] = Math.sin(pos[k] * .35 + t * .6) * Math.cos(pos[k + 2] * .35 + t * .5) * 1.4;
     gGeo.attributes.position.needsUpdate = true;
     shapes.forEach((m, i) => { m.rotation.y += .003 + i * .0006; m.rotation.x += .0012; });
+    updateGlyphs(t);
     aR.render(aS, aC);
   }
   function loop() {
