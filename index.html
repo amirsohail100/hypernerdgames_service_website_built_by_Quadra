@@ -640,7 +640,28 @@ body.light-mode .section-h2,body.light-mode .hero-h1 { color:#17131a; }
 @media(hover:none),(pointer:coarse) { body,body *{cursor:auto!important} #cur,#cur-trail{display:none!important} .game-desc{max-height:100px}.game-cta-link{opacity:1;transform:none} }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important} #grain{display:none} }
 
+/* ===== THREE.JS LAYER ===== */
+#ambient-3d { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: .9; transition: opacity .6s; }
+body.light-mode #ambient-3d { opacity: .35; }
+.hero-bg { background: radial-gradient(ellipse 80% 60% at 65% 40%, rgba(200,0,45,.16) 0%, transparent 70%), radial-gradient(ellipse 40% 70% at 10% 70%, rgba(100,0,20,.1) 0%, transparent 60%); }
+#about, #contact { background: rgba(22,18,18,.8); }
+body.light-mode #about, body.light-mode #contact { background: rgba(232,229,235,.85); }
+.card-3d { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .6s ease; }
+.card-3d canvas { display: block; width: 100%; height: 100%; }
+.game-card:hover .card-3d { opacity: 1; }
+.game-card .card-art { transition: transform .7s cubic-bezier(0.16,1,0.3,1), opacity .5s; }
+.game-card:hover .card-art { opacity: .15; }
+@media (hover:none), (pointer:coarse) { .card-3d { display: none; } }
+#inputs { position: relative; z-index: 2; padding: 120px 60px; }
+.inputs-head { max-width: 1300px; margin: 0 auto 56px; }
+.inputs-grid { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; }
+.input-cell { position: relative; height: 320px; border: 1px solid var(--charcoal); background: rgba(15,13,13,.55); overflow: hidden; transition: border-color .3s; }
+.input-cell:hover { border-color: rgba(217,0,55,.35); }
+.input-cell canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.input-label { position: absolute; left: 20px; bottom: 16px; z-index: 2; font-size: .58rem; letter-spacing: 3px; text-transform: uppercase; color: var(--warm-gray); pointer-events: none; }
+@media (max-width: 900px) { #inputs { padding: 80px 24px; } .inputs-grid { grid-template-columns: repeat(2,1fr); } }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
@@ -650,6 +671,7 @@ body.light-mode .section-h2,body.light-mode .hero-h1 { color:#17131a; }
 <div id="cur-trail"></div>
 <div id="grain"></div>
 <canvas id="particles-canvas"></canvas>
+<canvas id="ambient-3d"></canvas>
 
 <nav id="nav">
   <a href="#" class="nav-logo">HYPERNERD GAMES<span class="nav-logo-sub">Est. 2024</span></a>
@@ -699,6 +721,16 @@ body.light-mode .section-h2,body.light-mode .hero-h1 { color:#17131a; }
   <div class="stat-block sr d2"><span class="stat-num"><span class="c" data-to="42">0</span></span><span class="stat-label">Team Members</span></div>
   <div class="stat-block sr d3"><span class="stat-num"><span class="c" data-to="25">0</span></span><span class="stat-label">Industry Awards</span></div>
 </div>
+
+<section id="inputs">
+  <div class="inputs-head sr"><p class="section-label">Built for the Controller</p><h2 class="section-h2">SIGNATURE <em>INPUTS</em></h2></div>
+  <div class="inputs-grid">
+    <div class="input-cell sr" data-k="cross"><span class="input-label">Cross</span></div>
+    <div class="input-cell sr d1" data-k="circle"><span class="input-label">Circle</span></div>
+    <div class="input-cell sr d2" data-k="tri"><span class="input-label">Triangle</span></div>
+    <div class="input-cell sr d3" data-k="square"><span class="input-label">Square</span></div>
+  </div>
+</section>
 
 <section id="games">
   <div class="games-header sr">
@@ -1000,6 +1032,246 @@ document.querySelectorAll('.cform .ff').forEach((field, i) => {
   if (label && control) { if (!control.id) control.id = `contact-field-${i+1}`; label.htmlFor = control.id; }
 });
 
+</script>
+<script>
+// THREE.JS LAYER — ambient background (scroll-linked) + card hover 3D
+(function () {
+  if (typeof THREE === 'undefined') return;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const RED = 0xD90037, RED_B = 0xFF0043;
+  const mouse = { x: 0, y: 0 };
+  addEventListener('mousemove', e => { mouse.x = e.clientX / innerWidth - .5; mouse.y = e.clientY / innerHeight - .5; });
+
+  // ---- AMBIENT: wave grid + wireframe shapes spread along the page ----
+  const amb = document.getElementById('ambient-3d');
+  const aR = new THREE.WebGLRenderer({ canvas: amb, alpha: true, antialias: true });
+  aR.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  aR.setSize(innerWidth, innerHeight, false);
+  const aS = new THREE.Scene();
+  const aC = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, .1, 200);
+  aC.position.z = 13;
+  let camY = 0;
+
+  const N = innerWidth < 900 ? 22 : 40, gp = [];
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) gp.push((i / (N - 1) - .5) * 60, 0, (j / (N - 1) - .5) * 60);
+  const gGeo = new THREE.BufferGeometry();
+  gGeo.setAttribute('position', new THREE.Float32BufferAttribute(gp, 3));
+  const grid = new THREE.Points(gGeo, new THREE.PointsMaterial({ color: RED, size: .09, transparent: true, opacity: .35 }));
+  grid.position.y = -9; grid.rotation.x = -.35;
+  aS.add(grid);
+
+  const wireMat = (c, o) => new THREE.MeshBasicMaterial({ color: c, wireframe: true, transparent: true, opacity: o });
+  const shapes = [];
+  const mk = (geo, x, y, z, s, o) => { const m = new THREE.Mesh(geo, wireMat(RED_B, o)); m.position.set(x, y, z); m.scale.setScalar(s); aS.add(m); shapes.push(m); };
+  mk(new THREE.IcosahedronGeometry(1, 1), -6, 3, -3, 1.6, .22);
+  mk(new THREE.TorusGeometry(1, .02, 8, 80), 6, -2, -4, 2.2, .3);
+  mk(new THREE.OctahedronGeometry(1, 0), 4.5, 7, -7, 1.4, .18);
+  mk(new THREE.DodecahedronGeometry(1, 0), -5.5, -7.5, -5, 1.5, .2);
+  mk(new THREE.TorusKnotGeometry(.8, .2, 90, 10), 0, -17, -6, 1.2, .18);
+  mk(new THREE.IcosahedronGeometry(1, 0), 7, -20, -4, 1.8, .2);
+
+  // ---- CARD SCENES (built lazily on first hover) ----
+  const ring = (r, c, o) => new THREE.Mesh(new THREE.TorusGeometry(r, .012, 8, 160), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: o }));
+  const dust = (n, r, c, s) => {
+    const p = [];
+    for (let i = 0; i < n; i++) {
+      const th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1), rr = r * (.6 + Math.random() * .6);
+      p.push(rr * Math.sin(ph) * Math.cos(th), rr * Math.sin(ph) * Math.sin(th), rr * Math.cos(ph));
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(p, 3));
+    return new THREE.Points(g, new THREE.PointsMaterial({ color: c, size: s, transparent: true, opacity: .9 }));
+  };
+  const BUILDERS = [
+    // 01 Voidrift — void core with orbiting rings
+    g => {
+      const core = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 2), wireMat(RED_B, .75));
+      const r1 = ring(1.6, RED_B, .6), r2 = ring(1.9, 0xFF6A88, .35), d = dust(180, 2.4, 0xFF6A88, .04);
+      g.add(core, r1, r2, d);
+      return (t, h) => {
+        core.rotation.set(t * .25, t * .4, 0);
+        core.scale.setScalar(1 + Math.sin(t * 1.6) * .05 + h * .12);
+        r1.rotation.set(Math.PI / 2.4, t * (.4 + h * 1.4), 0);
+        r2.rotation.set(t * (.3 + h), Math.PI / 3, t * .2);
+        d.rotation.y = -t * (.2 + h * .8);
+      };
+    },
+    // 02 Nexus Arena — sci-fi octa with a scanning ring and orbiting cubes
+    g => {
+      const oct = new THREE.Mesh(new THREE.OctahedronGeometry(1.2, 0), wireMat(0xFF7A1A, .8));
+      const scan = ring(1.2, 0xFFB26B, .9); scan.rotation.x = Math.PI / 2;
+      const cubes = [0, 1, 2, 3].map(() => new THREE.Mesh(new THREE.BoxGeometry(.18, .18, .18), wireMat(0xFF7A1A, .9)));
+      g.add(oct, scan, ...cubes);
+      return (t, h) => {
+        oct.rotation.set(t * .3, t * (.5 + h * 1.2), 0);
+        const y = Math.sin(t * (1.4 + h * 2)) * 1.1;
+        scan.position.y = y; scan.scale.setScalar(Math.max(.05, 1 - Math.abs(y) / 1.2));
+        cubes.forEach((c, i) => { const a = t * (.6 + h * 1.4) + i * Math.PI / 2; c.position.set(Math.cos(a) * 2.1, Math.sin(a * 2) * .3, Math.sin(a) * 2.1); c.rotation.set(t, t * 1.3, 0); });
+      };
+    },
+    // 03 Ember Protocol — violet dodeca, shockwave ring, rising embers
+    g => {
+      const dod = new THREE.Mesh(new THREE.DodecahedronGeometry(1.1, 0), wireMat(0x9B5CFF, .75));
+      const shock = ring(1, 0xFF8A3D, .6); shock.rotation.x = Math.PI / 2;
+      const emb = dust(140, 1.8, 0xFF8A3D, .05), p = emb.geometry.attributes.position.array;
+      g.add(dod, shock, emb);
+      return (t, h) => {
+        dod.rotation.set(t * .3, t * (.45 + h * 1.2), t * .15);
+        const k = (t * (.5 + h)) % 1;
+        shock.scale.setScalar(1 + k * 1.8);
+        shock.material.opacity = .6 * (1 - k) * (.3 + h);
+        for (let i = 1; i < p.length; i += 3) { p[i] += .01 + h * .025; if (p[i] > 2.2) p[i] = -2.2; }
+        emb.geometry.attributes.position.needsUpdate = true;
+      };
+    }
+  ];
+  const states = [...document.querySelectorAll('.game-card')].map(card => ({ card, h: 0, target: 0, ready: false, px: 0, py: 0, rx: 0, ry: 0 }));
+  function initCard(st, i) {
+    const wrap = document.createElement('div');
+    wrap.className = 'card-3d';
+    st.card.querySelector('.game-card-bg').after(wrap);
+    const r = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    r.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    wrap.appendChild(r.domElement);
+    st.sc = new THREE.Scene();
+    st.cam = new THREE.PerspectiveCamera(45, 1, .1, 50); st.cam.position.z = 6;
+    st.g = new THREE.Group(); st.sc.add(st.g);
+    st.update = BUILDERS[i](st.g); st.r = r;
+    const fit = () => { const w = st.card.clientWidth, hh = st.card.clientHeight; r.setSize(w, hh, false); st.cam.aspect = w / hh; st.cam.updateProjectionMatrix(); };
+    fit(); new ResizeObserver(fit).observe(st.card);
+    st.ready = true;
+  }
+  states.forEach((st, i) => {
+    st.card.addEventListener('mouseenter', () => { if (!st.ready && !reduce) initCard(st, i); st.target = 1; });
+    st.card.addEventListener('mouseleave', () => { st.target = 0; });
+    st.card.addEventListener('mousemove', e => { const b = st.card.getBoundingClientRect(); st.px = (e.clientX - b.left) / b.width - .5; st.py = (e.clientY - b.top) / b.height - .5; });
+  });
+
+  // ---- LOOP ----
+  function drawAmbient(t) {
+    camY += ((-scrollY * .0045) - camY) * .08;
+    aC.position.x += (mouse.x * 2.2 - aC.position.x) * .03;
+    aC.position.y = camY; aC.lookAt(0, camY, 0);
+    const pos = gGeo.attributes.position.array;
+    for (let k = 0; k < pos.length; k += 3) pos[k + 1] = Math.sin(pos[k] * .35 + t * .6) * Math.cos(pos[k + 2] * .35 + t * .5) * 1.4;
+    gGeo.attributes.position.needsUpdate = true;
+    shapes.forEach((m, i) => { m.rotation.y += .003 + i * .0006; m.rotation.x += .0012; });
+    aR.render(aS, aC);
+  }
+  function loop() {
+    const t = performance.now() / 1000;
+    drawAmbient(t);
+    states.forEach(st => {
+      st.h += (st.target - st.h) * .08;
+      if (!st.ready || st.h < .002) return;
+      st.rx += (st.py - st.rx) * .1; st.ry += (st.px - st.ry) * .1;
+      st.g.rotation.set(st.rx * .6, st.ry * .9, 0);
+      st.update(t, st.h);
+      st.r.render(st.sc, st.cam);
+    });
+    requestAnimationFrame(loop);
+  }
+  addEventListener('resize', () => { aR.setSize(innerWidth, innerHeight, false); aC.aspect = innerWidth / innerHeight; aC.updateProjectionMatrix(); });
+  if (reduce) drawAmbient(0); else loop();
+})();
+</script>
+<script>
+// SIGNATURE INPUTS — 3D controller glyphs with angle-driven light/dark noise glow
+(function () {
+  if (typeof THREE === 'undefined') return;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const VS = 'varying vec3 vN; varying vec3 vV; void main(){ vec4 mv = modelViewMatrix*vec4(position,1.0); vN = normalize(normalMatrix*normal); vV = -mv.xyz; gl_Position = projectionMatrix*mv; }';
+  const FS = `
+uniform vec3 uColor; uniform vec2 uMouse; uniform float uHover; uniform float uTime;
+varying vec3 vN; varying vec3 vV;
+float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
+void main(){
+  vec3 n = normalize(vN), v = normalize(vV);
+  vec2 m = uMouse;
+  float ang = atan(m.y, m.x);
+  float pol = sin(ang) * min(length(m) * 1.4, 1.0);
+  vec3 L = normalize(vec3(m * 1.5, 1.0));
+  float lam = max(dot(n, L), 0.0);
+  float fres = pow(1.0 - max(dot(n, v), 0.0), 2.0);
+  vec3 col = uColor * (0.35 + 0.65 * lam);
+  float glow = (fres * 0.8 + lam * 0.3) * uHover;
+  vec3 glowCol = mix(uColor * 0.25, mix(uColor, vec3(1.0), 0.6), smoothstep(-0.4, 0.5, pol));
+  col += glowCol * glow;
+  float gn = hash(floor(gl_FragCoord.xy * 0.5) + floor(uTime * 10.0));
+  col = mix(col, vec3(1.0), max(pol, 0.0) * gn * 0.5 * uHover);
+  col = mix(col, vec3(0.0), max(-pol, 0.0) * (1.0 - gn) * 0.6 * uHover);
+  gl_FragColor = vec4(col, 1.0);
+}`;
+
+  // rounded rectangle path helper
+  const rr = (p, w, h, r) => { const x = -w / 2, y = -h / 2; p.moveTo(x + r, y); p.lineTo(x + w - r, y); p.quadraticCurveTo(x + w, y, x + w, y + r); p.lineTo(x + w, y + h - r); p.quadraticCurveTo(x + w, y + h, x + w - r, y + h); p.lineTo(x + r, y + h); p.quadraticCurveTo(x, y + h, x, y + h - r); p.lineTo(x, y + r); p.quadraticCurveTo(x, y, x + r, y); return p; };
+
+  const haloCanvas = document.createElement('canvas'); haloCanvas.width = haloCanvas.height = 128;
+  const hx = haloCanvas.getContext('2d'), gr = hx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(.35, 'rgba(255,255,255,.35)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  hx.fillStyle = gr; hx.fillRect(0, 0, 128, 128);
+  const haloTex = new THREE.CanvasTexture(haloCanvas);
+
+  const opt = { depth: .28, bevelEnabled: true, bevelThickness: .09, bevelSize: .07, bevelSegments: 4, curveSegments: 40 };
+  function buildGlyph(k, mat) {
+    const grp = new THREE.Group();
+    const add = shape => { const g = new THREE.ExtrudeGeometry(shape, opt); g.center(); grp.add(new THREE.Mesh(g, mat)); };
+    if (k === 'circle') {
+      const s = new THREE.Shape(); s.absarc(0, 0, 1, 0, Math.PI * 2, false);
+      const h = new THREE.Path(); h.absarc(0, 0, .7, 0, Math.PI * 2, true); s.holes.push(h); add(s);
+    } else if (k === 'square') {
+      const s = rr(new THREE.Shape(), 1.7, 1.7, .22); s.holes.push(rr(new THREE.Path(), 1.2, 1.2, .1)); add(s);
+    } else if (k === 'tri') {
+      const s = new THREE.Shape(); s.moveTo(0, 1.05); s.lineTo(.95, -.6); s.lineTo(-.95, -.6); s.closePath();
+      const h = new THREE.Path(); h.moveTo(0, .6); h.lineTo(.5, -.38); h.lineTo(-.5, -.38); h.closePath(); s.holes.push(h); add(s);
+    } else {
+      const g = new THREE.ExtrudeGeometry(rr(new THREE.Shape(), 2.1, .5, .12), opt); g.center();
+      [Math.PI / 4, -Math.PI / 4].forEach(a => { const m = new THREE.Mesh(g, mat); m.rotation.z = a; grp.add(m); });
+    }
+    return grp;
+  }
+
+  const DEFS = { cross: 0xFF0043, circle: 0xFFD9DF, tri: 0xFF9A3D, square: 0x9B5CFF };
+  const states = [...document.querySelectorAll('.input-cell')].map(cell => {
+    const k = cell.dataset.k, col = new THREE.Color(DEFS[k]);
+    const R = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    R.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    cell.insertBefore(R.domElement, cell.firstChild);
+    const sc = new THREE.Scene(), cam = new THREE.PerspectiveCamera(40, 1, .1, 50); cam.position.z = 7;
+    const mat = new THREE.ShaderMaterial({ uniforms: { uColor: { value: col }, uMouse: { value: new THREE.Vector2() }, uHover: { value: 0 }, uTime: { value: 0 } }, vertexShader: VS, fragmentShader: FS });
+    const glyph = buildGlyph(k, mat);
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: haloTex, color: col, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+    halo.scale.setScalar(4.2); halo.position.z = -1;
+    const g = new THREE.Group(); g.add(glyph); sc.add(halo, g);
+    const st = { cell, R, sc, cam, g, mat, halo, mx: 0, my: 0, tx: 0, ty: 0, h: 0, target: 0, vis: true };
+    const fit = () => { const w = cell.clientWidth, hh = cell.clientHeight; R.setSize(w, hh, false); cam.aspect = w / hh; cam.updateProjectionMatrix(); };
+    fit(); new ResizeObserver(fit).observe(cell);
+    cell.addEventListener('mouseenter', () => { st.target = 1; });
+    cell.addEventListener('mouseleave', () => { st.target = 0; st.mx = 0; st.my = 0; });
+    cell.addEventListener('mousemove', e => { const b = cell.getBoundingClientRect(); st.mx = (e.clientX - b.left) / b.width * 2 - 1; st.my = -((e.clientY - b.top) / b.height * 2 - 1); });
+    new IntersectionObserver(en => { st.vis = en[0].isIntersecting; }).observe(cell);
+    return st;
+  });
+
+  function frame() {
+    const t = performance.now() / 1000;
+    states.forEach(st => {
+      st.h += (st.target - st.h) * .08;
+      st.tx += (st.mx - st.tx) * .08; st.ty += (st.my - st.ty) * .08;
+      if (!st.vis && st.h < .002) return;
+      st.g.position.y = Math.sin(t * 1.4) * .08;
+      st.g.rotation.set(-st.ty * .5, st.tx * .7 + t * .25, 0);
+      st.mat.uniforms.uMouse.value.set(st.tx, st.ty);
+      st.mat.uniforms.uHover.value = st.h;
+      st.mat.uniforms.uTime.value = t;
+      st.halo.material.opacity = st.h * (.25 + .25 * Math.hypot(st.tx, st.ty));
+      st.halo.position.set(st.tx * .6, st.ty * .6, -1);
+      st.R.render(st.sc, st.cam);
+    });
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  frame();
+})();
 </script>
 </body>
 </html>
