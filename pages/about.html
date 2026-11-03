@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0b10">
+<title>About — HypernerdGames</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/pages.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+<div id="preloader"><div class="pl-text">HYPERNERD</div><div class="pl-bar"><div class="pl-fill"></div></div></div>
+<div id="cur"></div>
+<div id="cur-trail"></div>
+<div id="grain"></div>
+<canvas id="particles-canvas"></canvas>
+<canvas id="ambient-3d"></canvas>
+<nav id="nav">
+  <a href="home.html" class="nav-logo">HYPERNERD GAMES<span class="nav-logo-sub">Est. 2024</span></a>
+  <ul class="nav-links"><li><a href="home.html">Home</a></li><li><a href="games.html">Games</a></li><li><a href="genre.html">Genre</a></li><li><a href="about.html" class="active">About</a></li><li><a href="help.html">Help</a></li></ul>
+  <div class="nav-actions">
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme" title="Toggle theme">◐</button>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
+    <a href="help.html#contact" class="nav-cta">Work With Us <span aria-hidden="true">↗</span></a>
+  </div>
+</nav>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+<main>
+<header class="page-hero sr"><p class="section-label">Our Studio</p><h1 class="page-title">WHO WE <em>ARE</em></h1><p class="page-sub">An independent studio built around passion, speed and sharp craft.</p></header><section id="about">
+  <div class="about-grid">
+    <div class="about-visual sr">
+      <div class="a-red"></div>
+      <div class="a-dark"><span class="a-dark-num">2024</span></div>
+      <div class="a-float"><span class="a-float-big">HYPERNERD</span><span class="a-float-sm">Independent Studio</span></div>
+    </div>
+    <div class="about-text sr d2">
+      <p class="section-label">Our Studio</p>
+      <h2 class="section-h2" style="margin-bottom:30px;">A STUDIO<br>OF <em>OBSESSIVES</em></h2>
+      <p>Founded in 2024, HypernerdGames was born from a belief: <strong>indie studios can compete at the highest level when passion drives every decision.</strong></p>
+      <p>Our 42-person team of developers, artists, writers and designers are united by one goal — crafting experiences that redefine what games can be. We don't follow trends. We set them.</p>
+      <div class="pillars">
+        <div class="pillar"><span class="pillar-num">01</span><span class="pillar-lbl">Competitive Spirit</span></div>
+        <div class="pillar"><span class="pillar-num">02</span><span class="pillar-lbl">Bold Vision</span></div>
+        <div class="pillar"><span class="pillar-num">03</span><span class="pillar-lbl">Relentless Energy</span></div>
+        <div class="pillar"><span class="pillar-num">04</span><span class="pillar-lbl">Modern Craft</span></div>
+      </div>
+    </div>
+  </div>
+</section><div id="stats">
+  <div class="stat-block sr"><span class="stat-num"><span class="c" data-to="10">0</span><span class="stat-suf">M+</span></span><span class="stat-label">Players Worldwide</span></div>
+  <div class="stat-block sr d1"><span class="stat-num"><span class="c" data-to="8">0</span><span class="stat-suf">+</span></span><span class="stat-label">Titles Shipped</span></div>
+  <div class="stat-block sr d2"><span class="stat-num"><span class="c" data-to="42">0</span></span><span class="stat-label">Team Members</span></div>
+  <div class="stat-block sr d3"><span class="stat-num"><span class="c" data-to="25">0</span></span><span class="stat-label">Industry Awards</span></div>
+</div>
+
+<section id="team">
+  <div class="team-top sr">
+    <div><p class="section-label">The Crew</p><h2 class="section-h2">MEET THE<br><em>NERDS</em></h2></div>
+    <div class="team-bg-num">42</div>
+  </div>
+  <div class="team-grid">
+    <div class="member sr"><div class="member-av">ZK</div><div class="member-nm">Zara Kwan</div><div class="member-rl">Founder & CEO</div><p class="member-bio">10 years shipping AAA titles. Obsessed with narrative design and pushing what games can say.</p><div class="member-letter">Z</div></div>
+    <div class="member sr d1"><div class="member-av">MR</div><div class="member-nm">Marcus Rivera</div><div class="member-rl">Creative Director</div><p class="member-bio">Former Naughty Dog. Believes every game should feel like the best film you've never seen.</p><div class="member-letter">M</div></div>
+    <div class="member sr d2"><div class="member-av">SN</div><div class="member-nm">Sora Nishida</div><div class="member-rl">Lead Engineer</div><p class="member-bio">Unreal Engine wizard. Has written more shaders than most people have eaten meals.</p><div class="member-letter">S</div></div>
+    <div class="member sr d3"><div class="member-av">AO</div><div class="member-nm">Anika Osei</div><div class="member-rl">Art Director</div><p class="member-bio">Concept to pixel, every frame is a painting. Raised on manga, fuelled by ambition.</p><div class="member-letter">A</div></div>
+  </div>
+</section>
+</main>
+<footer>
+  <span class="f-brand">HYPERNERD<span>GAMES</span></span>
+  <span class="f-copy">© 2024 HypernerdGames. All rights reserved.</span>
+  <div class="f-links"><a href="#">Twitter</a><a href="#">Discord</a><a href="#">Steam</a><a href="#">YouTube</a><a href="#">LinkedIn</a></div>
+</footer>
+<button id="backTop" class="back-top" type="button" aria-label="Back to top">↑</button>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="../js/main.js"></script>
+<script src="../js/three-bg.js"></script>
+</body>
+</html>
