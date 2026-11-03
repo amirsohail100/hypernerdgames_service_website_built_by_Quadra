@@ -659,3 +659,6 @@ body.light-mode .game-overlay { background: linear-gradient(to top, rgba(242,240
 body.light-mode .game-card { border-color: #d5cfd8; }
 body.light-mode .game-index { color: rgba(23,19,26,.06); }
 body.light-mode .game-platforms { color: #6e6671; }
+
+/* SHUTTER REOPEN (tab return) — starts fully closed, rolls up */
+#preloader.reopen { animation: shutterUp .85s cubic-bezier(.65,0,.35,1) forwards; transform-origin: 50% 100%; }
