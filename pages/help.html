@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0b10">
+<title>Help — HypernerdGames</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/pages.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+<div id="preloader"><div class="pl-text">HYPERNERD</div><div class="pl-bar"><div class="pl-fill"></div></div></div>
+<div id="cur"></div>
+<div id="cur-trail"></div>
+<div id="grain"></div>
+<canvas id="particles-canvas"></canvas>
+<canvas id="ambient-3d"></canvas>
+<nav id="nav">
+  <a href="home.html" class="nav-logo">HYPERNERD GAMES<span class="nav-logo-sub">Est. 2024</span></a>
+  <ul class="nav-links"><li><a href="home.html">Home</a></li><li><a href="games.html">Games</a></li><li><a href="genre.html">Genre</a></li><li><a href="about.html">About</a></li><li><a href="help.html" class="active">Help</a></li></ul>
+  <div class="nav-actions">
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme" title="Toggle theme">◐</button>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
+    <a href="help.html#contact" class="nav-cta">Work With Us <span aria-hidden="true">↗</span></a>
+  </div>
+</nav>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+<main>
+<header class="page-hero sr"><p class="section-label">Help & Contact</p><h1 class="page-title">HOW CAN WE <em>HELP?</em></h1><p class="page-sub">Answers to common questions, and a direct line to our team.</p></header><section class="faq-section">
+<div class="faq-list">
+  <details class="faq sr"><summary>Which platforms are your games on?</summary><p>Each title lists its launch platforms on its card. Most of our games support PC and current consoles, and some are on mobile or Nintendo Switch.</p></details>
+  <details class="faq sr d1"><summary>How do I follow a game’s development?</summary><p>Follow our socials from the footer. We post devlogs, playtest invites and release dates there first.</p></details>
+  <details class="faq sr d2"><summary>Do you accept fan art or fan mail?</summary><p>Yes. Choose “Fan Mail” in the contact form and tell us what you made. We read every message.</p></details>
+  <details class="faq sr d3"><summary>How can I apply for a job at HypernerdGames?</summary><p>Choose “Careers” in the contact form and share your portfolio or LinkedIn profile.</p></details>
+  <details class="faq sr d4"><summary>Can press get review keys?</summary><p>Yes. Send a request through the “Press Inquiry” option with your outlet name and audience size.</p></details>
+</div>
+</section><section id="contact">
+  <div class="contact-inner">
+    <div class="contact-grid">
+      <div class="sr">
+        <p class="section-label">Get in Touch</p>
+        <h2 class="section-h2">LET'S<br>MAKE<br><em>HISTORY.</em></h2>
+        <p class="contact-desc">Press inquiries, partnership opportunities, career conversations — we're always listening.</p>
+        <div class="contact-deets">
+          <div class="c-det"><span class="c-det-lbl">General</span><span class="c-det-val">hello@hypernerdgames.com</span></div>
+          <div class="c-det"><span class="c-det-lbl">Press</span><span class="c-det-val">press@hypernerdgames.com</span></div>
+          <div class="c-det"><span class="c-det-lbl">Location</span><span class="c-det-val">Mumbai, India</span></div>
+        </div>
+      </div>
+      <form class="cform sr d2" onsubmit="handleForm(event)">
+        <div class="form-row">
+          <div class="ff"><label class="flbl">First Name</label><input class="finp" name="firstName" type="text" placeholder="Marcus" autocomplete="given-name" required></div>
+          <div class="ff"><label class="flbl">Last Name</label><input class="finp" name="lastName" type="text" placeholder="Rivera" autocomplete="family-name" required></div>
+        </div>
+        <div class="ff"><label class="flbl">Email</label><input class="finp" name="email" type="email" placeholder="you@domain.com" autocomplete="email" required></div>
+        <div class="ff"><label class="flbl">Inquiry Type</label>
+          <select class="fsel finp">
+            <option>Press Inquiry</option><option>Partnership</option><option>Careers</option><option>Fan Mail</option><option>Other</option>
+          </select>
+        </div>
+        <div class="ff"><label class="flbl">Message</label><textarea class="ftxt" name="message" placeholder="Tell us what's on your mind…" minlength="10" required></textarea></div>
+        <button type="submit" class="sbtn" id="sbtn">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <span class="f-brand">HYPERNERD<span>GAMES</span></span>
+  <span class="f-copy">© 2024 HypernerdGames. All rights reserved.</span>
+  <div class="f-links"><a href="#">Twitter</a><a href="#">Discord</a><a href="#">Steam</a><a href="#">YouTube</a><a href="#">LinkedIn</a></div>
+</footer>
+<button id="backTop" class="back-top" type="button" aria-label="Back to top">↑</button>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="../js/main.js"></script>
+<script src="../js/three-bg.js"></script>
+</body>
+</html>
