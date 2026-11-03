@@ -1,9 +1,19 @@
 
-// PRELOADER
+// PRELOADER + SHUTTER (the same shutter also closes and reopens when the user returns to this tab)
+const pl = document.getElementById('preloader');
+let shutterTimer, hideTimer;
 window.addEventListener('load', () => {
-  const pl = document.getElementById('preloader');
   pl.classList.add('done');
   setTimeout(() => { pl.style.display = 'none'; }, 2850);
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible' || !pl) return;
+  clearTimeout(shutterTimer); clearTimeout(hideTimer);
+  pl.style.display = '';
+  pl.classList.remove('done', 'reopen');   // shutter lands fully closed
+  void pl.offsetWidth;                     // restart the animation
+  shutterTimer = setTimeout(() => pl.classList.add('reopen'), 350);
+  hideTimer = setTimeout(() => { pl.style.display = 'none'; pl.classList.remove('reopen'); }, 1500);
 });
 
 // CURSOR
@@ -123,14 +133,22 @@ if (menuToggle && navLinks) {
     navLinks.classList.remove('open');
   }));
 }
+// THEME (saved in localStorage so the choice survives tab switches and reloads)
 const themeToggle = document.getElementById('themeToggle');
-if (themeToggle) themeToggle.addEventListener('click', () => {
-  document.body.classList.toggle('light-mode');
-  const light = document.body.classList.contains('light-mode');
-  themeToggle.textContent = light ? '☼' : '◐';
-  themeToggle.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
-  showToast(light ? 'Light theme enabled' : 'Dark theme enabled');
-});
+const THEME_KEY = 'hn-theme';
+function applyTheme(light, notify) {
+  document.body.classList.toggle('light-mode', light);
+  if (themeToggle) {
+    themeToggle.textContent = light ? '☼' : '◐';
+    themeToggle.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+  }
+  try { localStorage.setItem(THEME_KEY, light ? 'light' : 'dark'); } catch (e) {}
+  if (notify) showToast(light ? 'Light theme enabled' : 'Dark theme enabled');
+}
+let savedLight = false;
+try { savedLight = localStorage.getItem(THEME_KEY) === 'light'; } catch (e) {}
+applyTheme(savedLight, false);
+if (themeToggle) themeToggle.addEventListener('click', () => applyTheme(!document.body.classList.contains('light-mode'), true));
 const gameSearch = document.getElementById('gameSearch');
 const filterButtons = [...document.querySelectorAll('.filter-btn')];
 const gameCards = [...document.querySelectorAll('.game-card')];
