@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0b10">
+<title>Forge the Future — HypernerdGames</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/pages.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+<div id="preloader"><div class="pl-text">HYPERNERD</div><div class="pl-bar"><div class="pl-fill"></div></div></div>
+<div id="cur"></div>
+<div id="cur-trail"></div>
+<div id="grain"></div>
+<canvas id="particles-canvas"></canvas>
+<canvas id="ambient-3d"></canvas>
+<nav id="nav">
+  <a href="home.html" class="nav-logo">HYPERNERD GAMES<span class="nav-logo-sub">Est. 2024</span></a>
+  <ul class="nav-links"><li><a href="home.html" class="active">Home</a></li><li><a href="games.html">Games</a></li><li><a href="genre.html">Genre</a></li><li><a href="about.html">About</a></li><li><a href="help.html">Help</a></li></ul>
+  <div class="nav-actions">
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme" title="Toggle theme">◐</button>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
+    <a href="help.html#contact" class="nav-cta">Work With Us <span aria-hidden="true">↗</span></a>
+  </div>
+</nav>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+<main>
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-slab" id="heroSlab">
+    <div class="hero-slab-text">HNG</div>
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Independent Game Studio</p>
+    <h1 class="hero-h1">WE<br>FORGE<br><em>WORLDS.</em></h1>
+    <p class="hero-tagline">Crafting story-driven, visually stunning games that leave a mark. From concept to launch — we do it different.</p>
+    <div class="hero-actions">
+      <a href="#games" class="btn-hero">Explore Our Games</a>
+      <a href="#about" class="btn-ghost"><span class="arrow-line"></span>Our Story</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span class="scroll-label">Scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+</section><div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item hi">HYPERNERD GAMES</span><span class="marquee-item">Voidrift Chronicles</span><span class="marquee-item">Nexus Arena</span><span class="marquee-item hi">Ember Protocol</span><span class="marquee-item">Competitive</span><span class="marquee-item hi">Bold</span><span class="marquee-item">Energetic</span><span class="marquee-item hi">Modern</span><span class="marquee-item">Forge the Future</span>
+    <span class="marquee-item hi">HYPERNERD GAMES</span><span class="marquee-item">Voidrift Chronicles</span><span class="marquee-item">Nexus Arena</span><span class="marquee-item hi">Ember Protocol</span><span class="marquee-item">Competitive</span><span class="marquee-item hi">Bold</span><span class="marquee-item">Energetic</span><span class="marquee-item hi">Modern</span><span class="marquee-item">Forge the Future</span>
+  </div>
+</div>
+
+<div id="stats">
+  <div class="stat-block sr"><span class="stat-num"><span class="c" data-to="10">0</span><span class="stat-suf">M+</span></span><span class="stat-label">Players Worldwide</span></div>
+  <div class="stat-block sr d1"><span class="stat-num"><span class="c" data-to="8">0</span><span class="stat-suf">+</span></span><span class="stat-label">Titles Shipped</span></div>
+  <div class="stat-block sr d2"><span class="stat-num"><span class="c" data-to="42">0</span></span><span class="stat-label">Team Members</span></div>
+  <div class="stat-block sr d3"><span class="stat-num"><span class="c" data-to="25">0</span></span><span class="stat-label">Industry Awards</span></div>
+</div>
+
+<section id="games">
+  <div class="games-header sr">
+    <div><p class="section-label">Our Portfolio</p><h2 class="section-h2">FEATURED<br><em>TITLES</em></h2></div>
+    <a href="games.html" class="view-all">View All Games</a>
+  </div>
+  <div class="games-track">
+    <div class="game-card gc-1 sr" data-title="Voidrift Chronicles" data-genre="rpg">
+      <div class="game-card-bg"><div class="card-art"><div class="shape-circle"></div></div></div>
+      <div class="game-overlay"></div>
+      <span class="game-badge">New Release</span>
+      <span class="game-index">01</span>
+      <div class="game-content">
+        <p class="game-genre">Dark Fantasy RPG</p>
+        <h3 class="game-title">Voidrift Chronicles</h3>
+        <p class="game-desc">A sprawling dark fantasy RPG set in a dying universe. Forge alliances, master forbidden magic, and decide the fate of existence itself.</p>
+        <div class="game-foot"><span class="game-platforms">PC · PS5 · Xbox Series X</span><a href="#" class="game-cta-link">Explore →</a></div>
+      </div>
+    </div>
+    <div class="game-card gc-2 sr d1" data-title="Nexus Arena" data-genre="sci-fi">
+      <div class="game-card-bg"><div class="card-art"><div class="shape-diamond"></div></div></div>
+      <div class="game-overlay"></div>
+      <span class="game-index">02</span>
+      <div class="game-content">
+        <p class="game-genre">Sci-Fi Battle Royale</p>
+        <h3 class="game-title">Nexus Arena</h3>
+        <p class="game-desc">Survive the most brutal intergalactic battle arena ever designed. 100 players. One winner. Zero mercy.</p>
+        <div class="game-foot"><span class="game-platforms">PC · Console · Mobile</span><a href="#" class="game-cta-link">Explore →</a></div>
+      </div>
+    </div>
+    <div class="game-card gc-3 sr d2" data-title="Ember Protocol" data-genre="action">
+      <div class="game-card-bg"><div class="card-art"><div class="shape-oct"></div></div></div>
+      <div class="game-overlay"></div>
+      <span class="game-index">03</span>
+      <div class="game-content">
+        <p class="game-genre">Action Roguelite</p>
+        <h3 class="game-title">Ember Protocol</h3>
+        <p class="game-desc">A relentless roguelite where every run rewrites your skills. Hundreds of synergies. No two playthroughs ever the same.</p>
+        <div class="game-foot"><span class="game-platforms">PC · Nintendo Switch</span><a href="#" class="game-cta-link">Explore →</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <span class="f-brand">HYPERNERD<span>GAMES</span></span>
+  <span class="f-copy">© 2024 HypernerdGames. All rights reserved.</span>
+  <div class="f-links"><a href="#">Twitter</a><a href="#">Discord</a><a href="#">Steam</a><a href="#">YouTube</a><a href="#">LinkedIn</a></div>
+</footer>
+<button id="backTop" class="back-top" type="button" aria-label="Back to top">↑</button>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="../js/main.js"></script>
+<script src="../js/three-bg.js"></script>
+</body>
+</html>

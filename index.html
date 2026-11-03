@@ -652,6 +652,14 @@ body.light-mode #about, body.light-mode #contact { background: rgba(232,229,235,
 .game-card .card-art { transition: transform .7s cubic-bezier(0.16,1,0.3,1), opacity .5s; }
 .game-card:hover .card-art { opacity: .15; }
 @media (hover:none), (pointer:coarse) { .card-3d { display: none; } }
+#inputs { position: relative; z-index: 2; padding: 120px 60px; }
+.inputs-head { max-width: 1300px; margin: 0 auto 56px; }
+.inputs-grid { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; }
+.input-cell { position: relative; height: 320px; border: 1px solid var(--charcoal); background: rgba(15,13,13,.55); overflow: hidden; transition: border-color .3s; }
+.input-cell:hover { border-color: rgba(217,0,55,.35); }
+.input-cell canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.input-label { position: absolute; left: 20px; bottom: 16px; z-index: 2; font-size: .58rem; letter-spacing: 3px; text-transform: uppercase; color: var(--warm-gray); pointer-events: none; }
+@media (max-width: 900px) { #inputs { padding: 80px 24px; } .inputs-grid { grid-template-columns: repeat(2,1fr); } }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
@@ -713,6 +721,16 @@ body.light-mode #about, body.light-mode #contact { background: rgba(232,229,235,
   <div class="stat-block sr d2"><span class="stat-num"><span class="c" data-to="42">0</span></span><span class="stat-label">Team Members</span></div>
   <div class="stat-block sr d3"><span class="stat-num"><span class="c" data-to="25">0</span></span><span class="stat-label">Industry Awards</span></div>
 </div>
+
+<section id="inputs">
+  <div class="inputs-head sr"><p class="section-label">Built for the Controller</p><h2 class="section-h2">SIGNATURE <em>INPUTS</em></h2></div>
+  <div class="inputs-grid">
+    <div class="input-cell sr" data-k="cross"><span class="input-label">Cross</span></div>
+    <div class="input-cell sr d1" data-k="circle"><span class="input-label">Circle</span></div>
+    <div class="input-cell sr d2" data-k="tri"><span class="input-label">Triangle</span></div>
+    <div class="input-cell sr d3" data-k="square"><span class="input-label">Square</span></div>
+  </div>
+</section>
 
 <section id="games">
   <div class="games-header sr">
@@ -1052,77 +1070,6 @@ document.querySelectorAll('.cform .ff').forEach((field, i) => {
   mk(new THREE.TorusKnotGeometry(.8, .2, 90, 10), 0, -17, -6, 1.2, .18);
   mk(new THREE.IcosahedronGeometry(1, 0), 7, -20, -4, 1.8, .2);
 
-  // ---- FLOATING CONTROLLER GLYPHS (X, circle, triangle, square) in background ----
-  const rawM = { x: -9999, y: -9999 };
-  addEventListener('mousemove', e => { rawM.x = e.clientX; rawM.y = e.clientY; });
-  document.addEventListener('mouseleave', () => { rawM.x = rawM.y = -9999; });
-  const gRR = (p, w, h, r) => { const x = -w / 2, y = -h / 2; p.moveTo(x + r, y); p.lineTo(x + w - r, y); p.quadraticCurveTo(x + w, y, x + w, y + r); p.lineTo(x + w, y + h - r); p.quadraticCurveTo(x + w, y + h, x + w - r, y + h); p.lineTo(x + r, y + h); p.quadraticCurveTo(x, y + h, x, y + h - r); p.lineTo(x, y + r); p.quadraticCurveTo(x, y, x + r, y); return p; };
-  const GVS = 'varying vec3 vN; varying vec3 vV; void main(){ vec4 mv = modelViewMatrix*vec4(position,1.0); vN = normalize(normalMatrix*normal); vV = -mv.xyz; gl_Position = projectionMatrix*mv; }';
-  const GFS = `
-uniform vec3 uColor; uniform vec2 uMouse; uniform vec2 uCenter; uniform float uGlow; uniform float uRadius; uniform float uTime;
-varying vec3 vN; varying vec3 vV;
-float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
-void main(){
-  vec3 n = normalize(vN), v = normalize(vV);
-  float fres = pow(1.0 - max(dot(n, v), 0.0), 2.0);
-  float dist = distance(gl_FragCoord.xy, uMouse);
-  float spot = (1.0 - smoothstep(0.0, uRadius, dist)) * uGlow;
-  vec2 dir = uMouse - uCenter;
-  float pol = sin(atan(dir.y, dir.x));
-  vec3 col = uColor * 0.45 + uColor * (fres * (0.4 + 1.6 * uGlow) + spot * 1.2);
-  float gn = hash(floor(gl_FragCoord.xy * 0.5) + floor(uTime * 12.0));
-  float ns = spot * 0.45;
-  col = mix(col, vec3(1.0), max(pol, 0.0) * gn * ns);
-  col = mix(col, vec3(0.0), max(-pol, 0.0) * (1.0 - gn) * ns);
-  gl_FragColor = vec4(col, 1.0);
-}`;
-  const GOPT = { depth: .28, bevelEnabled: true, bevelThickness: .08, bevelSize: .06, bevelSegments: 3, curveSegments: 24 };
-  function glyphGeo(k) {
-    const extr = s => { const g = new THREE.ExtrudeGeometry(s, GOPT); g.center(); return g; };
-    if (k === 'circle') { const s = new THREE.Shape(); s.absarc(0, 0, 1, 0, Math.PI * 2, false); const h = new THREE.Path(); h.absarc(0, 0, .7, 0, Math.PI * 2, true); s.holes.push(h); return extr(s); }
-    if (k === 'square') { const s = gRR(new THREE.Shape(), 1.7, 1.7, .22); s.holes.push(gRR(new THREE.Path(), 1.2, 1.2, .1)); return extr(s); }
-    if (k === 'tri') { const s = new THREE.Shape(); s.moveTo(0, 1.05); s.lineTo(.95, -.6); s.lineTo(-.95, -.6); s.closePath(); const h = new THREE.Path(); h.moveTo(0, .6); h.lineTo(.5, -.38); h.lineTo(-.5, -.38); h.closePath(); s.holes.push(h); return extr(s); }
-    return extr(gRR(new THREE.Shape(), 2.1, .5, .12));
-  }
-  const GLYPHS = [
-    { k: 'cross', c: 0xFF0043, p: [-7, 4, -2] },
-    { k: 'circle', c: 0xFFD9DF, p: [6, 1.5, -3] },
-    { k: 'tri', c: 0xFF9A3D, p: [-4.5, -6, -2.5] },
-    { k: 'square', c: 0x9B5CFF, p: [7, -9, -3] },
-    { k: 'circle', c: 0xFF6A88, p: [-6.5, -14, -3.5] },
-    { k: 'cross', c: 0xFF7A1A, p: [5.5, -19, -2.5] }
-  ];
-  const glyphs = GLYPHS.map((d, i) => {
-    const grp = new THREE.Group();
-    const mat = new THREE.ShaderMaterial({ uniforms: { uColor: { value: new THREE.Color(d.c) }, uMouse: { value: new THREE.Vector2(-999, -999) }, uCenter: { value: new THREE.Vector2() }, uGlow: { value: 0 }, uRadius: { value: 80 }, uTime: { value: 0 } }, vertexShader: GVS, fragmentShader: GFS });
-    if (d.k === 'cross') { const g = glyphGeo('cross'); [Math.PI / 4, -Math.PI / 4].forEach(a => { const m = new THREE.Mesh(g, mat); m.rotation.z = a; grp.add(m); }); }
-    else grp.add(new THREE.Mesh(glyphGeo(d.k), mat));
-    grp.scale.setScalar(1.1); aS.add(grp);
-    return { grp, mat, base: new THREE.Vector3(...d.p), off: new THREE.Vector2(), glow: 0, seed: i * 1.7 };
-  });
-  const gTmp = new THREE.Vector3();
-  function updateGlyphs(t) {
-    const pr = aR.getPixelRatio();
-    glyphs.forEach(g => {
-      g.grp.position.set(g.base.x + g.off.x, g.base.y + g.off.y + Math.sin(t * .8 + g.seed) * .25, g.base.z);
-      g.grp.rotation.set(Math.sin(t * .5 + g.seed) * .3, t * .3 + g.seed, Math.cos(t * .4 + g.seed) * .2);
-      gTmp.copy(g.grp.position).project(aC);
-      const sx = (gTmp.x + 1) / 2 * innerWidth, sy = (1 - gTmp.y) / 2 * innerHeight;
-      const dx = sx - rawM.x, dy = sy - rawM.y, d = Math.hypot(dx, dy);
-      let p = Math.max(0, 1 - d / 320); p *= p;
-      // deflect away from cursor
-      const k = d > 0 ? p * 2.6 / d : 0;
-      g.off.x += (dx * k - g.off.x) * .08;
-      g.off.y += (-dy * k - g.off.y) * .08;
-      g.glow += (p - g.glow) * .1;
-      g.mat.uniforms.uMouse.value.set(rawM.x * pr, (innerHeight - rawM.y) * pr);
-      g.mat.uniforms.uCenter.value.set(sx * pr, (innerHeight - sy) * pr);
-      g.mat.uniforms.uGlow.value = g.glow;
-      g.mat.uniforms.uRadius.value = (80 + 220 * g.glow) * pr;
-      g.mat.uniforms.uTime.value = t;
-    });
-  }
-
   // ---- CARD SCENES (built lazily on first hover) ----
   const ring = (r, c, o) => new THREE.Mesh(new THREE.TorusGeometry(r, .012, 8, 160), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: o }));
   const dust = (n, r, c, s) => {
@@ -1209,7 +1156,6 @@ void main(){
     for (let k = 0; k < pos.length; k += 3) pos[k + 1] = Math.sin(pos[k] * .35 + t * .6) * Math.cos(pos[k + 2] * .35 + t * .5) * 1.4;
     gGeo.attributes.position.needsUpdate = true;
     shapes.forEach((m, i) => { m.rotation.y += .003 + i * .0006; m.rotation.x += .0012; });
-    updateGlyphs(t);
     aR.render(aS, aC);
   }
   function loop() {
@@ -1227,6 +1173,104 @@ void main(){
   }
   addEventListener('resize', () => { aR.setSize(innerWidth, innerHeight, false); aC.aspect = innerWidth / innerHeight; aC.updateProjectionMatrix(); });
   if (reduce) drawAmbient(0); else loop();
+})();
+</script>
+<script>
+// SIGNATURE INPUTS — 3D controller glyphs with angle-driven light/dark noise glow
+(function () {
+  if (typeof THREE === 'undefined') return;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const VS = 'varying vec3 vN; varying vec3 vV; void main(){ vec4 mv = modelViewMatrix*vec4(position,1.0); vN = normalize(normalMatrix*normal); vV = -mv.xyz; gl_Position = projectionMatrix*mv; }';
+  const FS = `
+uniform vec3 uColor; uniform vec2 uMouse; uniform float uHover; uniform float uTime;
+varying vec3 vN; varying vec3 vV;
+float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
+void main(){
+  vec3 n = normalize(vN), v = normalize(vV);
+  vec2 m = uMouse;
+  float ang = atan(m.y, m.x);
+  float pol = sin(ang) * min(length(m) * 1.4, 1.0);
+  vec3 L = normalize(vec3(m * 1.5, 1.0));
+  float lam = max(dot(n, L), 0.0);
+  float fres = pow(1.0 - max(dot(n, v), 0.0), 2.0);
+  vec3 col = uColor * (0.35 + 0.65 * lam);
+  float glow = (fres * 0.8 + lam * 0.3) * uHover;
+  vec3 glowCol = mix(uColor * 0.25, mix(uColor, vec3(1.0), 0.6), smoothstep(-0.4, 0.5, pol));
+  col += glowCol * glow;
+  float gn = hash(floor(gl_FragCoord.xy * 0.5) + floor(uTime * 10.0));
+  col = mix(col, vec3(1.0), max(pol, 0.0) * gn * 0.5 * uHover);
+  col = mix(col, vec3(0.0), max(-pol, 0.0) * (1.0 - gn) * 0.6 * uHover);
+  gl_FragColor = vec4(col, 1.0);
+}`;
+
+  // rounded rectangle path helper
+  const rr = (p, w, h, r) => { const x = -w / 2, y = -h / 2; p.moveTo(x + r, y); p.lineTo(x + w - r, y); p.quadraticCurveTo(x + w, y, x + w, y + r); p.lineTo(x + w, y + h - r); p.quadraticCurveTo(x + w, y + h, x + w - r, y + h); p.lineTo(x + r, y + h); p.quadraticCurveTo(x, y + h, x, y + h - r); p.lineTo(x, y + r); p.quadraticCurveTo(x, y, x + r, y); return p; };
+
+  const haloCanvas = document.createElement('canvas'); haloCanvas.width = haloCanvas.height = 128;
+  const hx = haloCanvas.getContext('2d'), gr = hx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(.35, 'rgba(255,255,255,.35)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  hx.fillStyle = gr; hx.fillRect(0, 0, 128, 128);
+  const haloTex = new THREE.CanvasTexture(haloCanvas);
+
+  const opt = { depth: .28, bevelEnabled: true, bevelThickness: .09, bevelSize: .07, bevelSegments: 4, curveSegments: 40 };
+  function buildGlyph(k, mat) {
+    const grp = new THREE.Group();
+    const add = shape => { const g = new THREE.ExtrudeGeometry(shape, opt); g.center(); grp.add(new THREE.Mesh(g, mat)); };
+    if (k === 'circle') {
+      const s = new THREE.Shape(); s.absarc(0, 0, 1, 0, Math.PI * 2, false);
+      const h = new THREE.Path(); h.absarc(0, 0, .7, 0, Math.PI * 2, true); s.holes.push(h); add(s);
+    } else if (k === 'square') {
+      const s = rr(new THREE.Shape(), 1.7, 1.7, .22); s.holes.push(rr(new THREE.Path(), 1.2, 1.2, .1)); add(s);
+    } else if (k === 'tri') {
+      const s = new THREE.Shape(); s.moveTo(0, 1.05); s.lineTo(.95, -.6); s.lineTo(-.95, -.6); s.closePath();
+      const h = new THREE.Path(); h.moveTo(0, .6); h.lineTo(.5, -.38); h.lineTo(-.5, -.38); h.closePath(); s.holes.push(h); add(s);
+    } else {
+      const g = new THREE.ExtrudeGeometry(rr(new THREE.Shape(), 2.1, .5, .12), opt); g.center();
+      [Math.PI / 4, -Math.PI / 4].forEach(a => { const m = new THREE.Mesh(g, mat); m.rotation.z = a; grp.add(m); });
+    }
+    return grp;
+  }
+
+  const DEFS = { cross: 0xFF0043, circle: 0xFFD9DF, tri: 0xFF9A3D, square: 0x9B5CFF };
+  const states = [...document.querySelectorAll('.input-cell')].map(cell => {
+    const k = cell.dataset.k, col = new THREE.Color(DEFS[k]);
+    const R = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    R.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    cell.insertBefore(R.domElement, cell.firstChild);
+    const sc = new THREE.Scene(), cam = new THREE.PerspectiveCamera(40, 1, .1, 50); cam.position.z = 7;
+    const mat = new THREE.ShaderMaterial({ uniforms: { uColor: { value: col }, uMouse: { value: new THREE.Vector2() }, uHover: { value: 0 }, uTime: { value: 0 } }, vertexShader: VS, fragmentShader: FS });
+    const glyph = buildGlyph(k, mat);
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: haloTex, color: col, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+    halo.scale.setScalar(4.2); halo.position.z = -1;
+    const g = new THREE.Group(); g.add(glyph); sc.add(halo, g);
+    const st = { cell, R, sc, cam, g, mat, halo, mx: 0, my: 0, tx: 0, ty: 0, h: 0, target: 0, vis: true };
+    const fit = () => { const w = cell.clientWidth, hh = cell.clientHeight; R.setSize(w, hh, false); cam.aspect = w / hh; cam.updateProjectionMatrix(); };
+    fit(); new ResizeObserver(fit).observe(cell);
+    cell.addEventListener('mouseenter', () => { st.target = 1; });
+    cell.addEventListener('mouseleave', () => { st.target = 0; st.mx = 0; st.my = 0; });
+    cell.addEventListener('mousemove', e => { const b = cell.getBoundingClientRect(); st.mx = (e.clientX - b.left) / b.width * 2 - 1; st.my = -((e.clientY - b.top) / b.height * 2 - 1); });
+    new IntersectionObserver(en => { st.vis = en[0].isIntersecting; }).observe(cell);
+    return st;
+  });
+
+  function frame() {
+    const t = performance.now() / 1000;
+    states.forEach(st => {
+      st.h += (st.target - st.h) * .08;
+      st.tx += (st.mx - st.tx) * .08; st.ty += (st.my - st.ty) * .08;
+      if (!st.vis && st.h < .002) return;
+      st.g.position.y = Math.sin(t * 1.4) * .08;
+      st.g.rotation.set(-st.ty * .5, st.tx * .7 + t * .25, 0);
+      st.mat.uniforms.uMouse.value.set(st.tx, st.ty);
+      st.mat.uniforms.uHover.value = st.h;
+      st.mat.uniforms.uTime.value = t;
+      st.halo.material.opacity = st.h * (.25 + .25 * Math.hypot(st.tx, st.ty));
+      st.halo.position.set(st.tx * .6, st.ty * .6, -1);
+      st.R.render(st.sc, st.cam);
+    });
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  frame();
 })();
 </script>
 </body>

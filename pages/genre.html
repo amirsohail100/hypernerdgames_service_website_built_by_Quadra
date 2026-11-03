@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0b10">
+<title>Genre — HypernerdGames</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/pages.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+<div id="preloader"><div class="pl-text">HYPERNERD</div><div class="pl-bar"><div class="pl-fill"></div></div></div>
+<div id="cur"></div>
+<div id="cur-trail"></div>
+<div id="grain"></div>
+<canvas id="particles-canvas"></canvas>
+<canvas id="ambient-3d"></canvas>
+<nav id="nav">
+  <a href="home.html" class="nav-logo">HYPERNERD GAMES<span class="nav-logo-sub">Est. 2024</span></a>
+  <ul class="nav-links"><li><a href="home.html">Home</a></li><li><a href="games.html">Games</a></li><li><a href="genre.html" class="active">Genre</a></li><li><a href="about.html">About</a></li><li><a href="help.html">Help</a></li></ul>
+  <div class="nav-actions">
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme" title="Toggle theme">◐</button>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
+    <a href="help.html#contact" class="nav-cta">Work With Us <span aria-hidden="true">↗</span></a>
+  </div>
+</nav>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+<main>
+<header class="page-hero sr"><p class="section-label">Browse by Genre</p><h1 class="page-title">FIND YOUR <em>GENRE</em></h1><p class="page-sub">Three genres, three different ways to play. Pick one and dive in.</p></header><section class="genre-intro">
+<div class="genre-panels">
+  <div class="genre-panel sr"><p class="game-genre">Genre · RPG</p><h3>Dark Fantasy RPG</h3><p>Long, story-led journeys through worlds that are falling apart. Alliances, forbidden magic and choices with lasting weight.</p></div>
+  <div class="genre-panel sr d1"><p class="game-genre">Genre · Sci-Fi</p><h3>Sci-Fi Battle Royale</h3><p>High-stakes arenas with huge player counts. Fast rounds, hostile terrain and one winner per match.</p></div>
+  <div class="genre-panel sr d2"><p class="game-genre">Genre · Action</p><h3>Action Roguelite</h3><p>Short, punchy runs where every death teaches you something. Build synergies and push one more run.</p></div>
+</div>
+</section><section id="games">
+  <div class="games-header sr">
+    <div><p class="section-label">Our Portfolio</p><h2 class="section-h2">FEATURED<br><em>TITLES</em></h2></div>
+    <a href="games.html" class="view-all">View All Games</a>
+  </div>
+  <div class="games-tools" style="padding:0 60px;margin-bottom:24px">
+  <div class="game-search-wrap"><span aria-hidden="true">⌕</span><input id="gameSearch" type="search" placeholder="Search titles…" aria-label="Search titles"></div>
+  <div class="game-filters">
+    <button class="filter-btn active" data-filter="all" type="button">All</button>
+    <button class="filter-btn" data-filter="rpg" type="button">RPG</button>
+    <button class="filter-btn" data-filter="sci-fi" type="button">Sci-Fi</button>
+    <button class="filter-btn" data-filter="action" type="button">Action</button>
+  </div>
+</div>
+<p class="results-line" id="resultsLine"></p>
+<div class="games-track">
+    <div class="game-card gc-1 sr" data-title="Voidrift Chronicles" data-genre="rpg">
+      <div class="game-card-bg"><div class="card-art"><div class="shape-circle"></div></div></div>
+      <div class="game-overlay"></div>
+      <span class="game-badge">New Release</span>
+      <span class="game-index">01</span>
+      <div class="game-content">
+        <p class="game-genre">Dark Fantasy RPG</p>
+        <h3 class="game-title">Voidrift Chronicles</h3>
+        <p class="game-desc">A sprawling dark fantasy RPG set in a dying universe. Forge alliances, master forbidden magic, and decide the fate of existence itself.</p>
+        <div class="game-foot"><span class="game-platforms">PC · PS5 · Xbox Series X</span><a href="#" class="game-cta-link">Explore →</a></div>
+      </div>
+    </div>
+    <div class="game-card gc-2 sr d1" data-title="Nexus Arena" data-genre="sci-fi">
+      <div class="game-card-bg"><div class="card-art"><div class="shape-diamond"></div></div></div>
+      <div class="game-overlay"></div>
+      <span class="game-index">02</span>
+      <div class="game-content">
+        <p class="game-genre">Sci-Fi Battle Royale</p>
+        <h3 class="game-title">Nexus Arena</h3>
+        <p class="game-desc">Survive the most brutal intergalactic battle arena ever designed. 100 players. One winner. Zero mercy.</p>
+        <div class="game-foot"><span class="game-platforms">PC · Console · Mobile</span><a href="#" class="game-cta-link">Explore →</a></div>
+      </div>
+    </div>
+    <div class="game-card gc-3 sr d2" data-title="Ember Protocol" data-genre="action">
+      <div class="game-card-bg"><div class="card-art"><div class="shape-oct"></div></div></div>
+      <div class="game-overlay"></div>
+      <span class="game-index">03</span>
+      <div class="game-content">
+        <p class="game-genre">Action Roguelite</p>
+        <h3 class="game-title">Ember Protocol</h3>
+        <p class="game-desc">A relentless roguelite where every run rewrites your skills. Hundreds of synergies. No two playthroughs ever the same.</p>
+        <div class="game-foot"><span class="game-platforms">PC · Nintendo Switch</span><a href="#" class="game-cta-link">Explore →</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <span class="f-brand">HYPERNERD<span>GAMES</span></span>
+  <span class="f-copy">© 2024 HypernerdGames. All rights reserved.</span>
+  <div class="f-links"><a href="#">Twitter</a><a href="#">Discord</a><a href="#">Steam</a><a href="#">YouTube</a><a href="#">LinkedIn</a></div>
+</footer>
+<button id="backTop" class="back-top" type="button" aria-label="Back to top">↑</button>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="../js/main.js"></script>
+<script src="../js/three-bg.js"></script>
+</body>
+</html>

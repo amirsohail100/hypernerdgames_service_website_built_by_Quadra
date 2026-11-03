@@ -1,0 +1,18 @@
+.nav-links a.active{color:var(--off-white)}
+.nav-links a.active::after{width:100%}
+.page-hero{max-width:1300px;margin:0 auto;padding:200px 60px 70px;position:relative;z-index:2}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,9vw,8.5rem);line-height:.9;letter-spacing:-1px;color:var(--off-white);margin-top:14px}
+.page-title em{font-style:normal;color:var(--red)}
+.page-sub{margin-top:24px;max-width:520px;color:var(--warm-gray);font-weight:300;line-height:1.8}
+.faq-list{max-width:900px;margin:0 auto;padding:0 60px 40px;position:relative;z-index:2}
+.faq{border-bottom:1px solid var(--charcoal);padding:24px 0}
+.faq summary{cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--off-white);list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';float:right;color:var(--red)}
+.faq[open] summary::after{content:'−'}
+.faq p{margin-top:14px;color:var(--warm-gray);font-weight:300;line-height:1.8}
+.genre-panels{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;max-width:1300px;margin:0 auto;padding:0 60px 60px;position:relative;z-index:2}
+.genre-panel{background:var(--black2);border:1px solid var(--charcoal);padding:40px 32px}
+.genre-panel h3{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--off-white);margin:10px 0}
+.genre-panel p{color:var(--warm-gray);font-weight:300;line-height:1.8;font-size:.9rem}
+@media (max-width:900px){.page-hero{padding:150px 24px 60px}.faq-list{padding:0 24px}.genre-panels{grid-template-columns:1fr;padding:0 24px 40px}}
