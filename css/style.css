@@ -662,3 +662,7 @@ body.light-mode .game-platforms { color: #6e6671; }
 
 /* SHUTTER REOPEN (tab return) — starts fully closed, rolls up */
 #preloader.reopen { animation: shutterUp .85s cubic-bezier(.65,0,.35,1) forwards; transform-origin: 50% 100%; }
+
+/* SHUTTER DROP (leaving the tab / window) */
+@keyframes shutterDown { 0% { transform: perspective(1400px) translateY(-110%) rotateX(-16deg); } 100% { transform: perspective(1400px) translateY(0) rotateX(0deg); } }
+#preloader.closing { animation: shutterDown .6s cubic-bezier(.65,0,.35,1) forwards; transform-origin: 50% 100%; }
