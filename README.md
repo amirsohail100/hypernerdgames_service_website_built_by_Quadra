@@ -1,33 +1,67 @@
-# HypernerdGames — Official Studio Website
+# HypernerdGames Website
 
-Static marketing website for **HypernerdGames**, an independent game studio.
-It is built with plain HTML, CSS and JavaScript, with a Three.js ambient background.
-No build step or package manager is needed.
+The official website for **HypernerdGames**, an independent game studio. The site presents the studio, its game portfolio, genre overview, team, and contact information.
+
+It is a static, dependency-free front end built with HTML, CSS, and vanilla JavaScript, with a Three.js ambient background. There is no build step and no package manager.
+
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [Pages](#pages)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Responsive Design](#responsive-design)
+- [Configuration and Customisation](#configuration-and-customisation)
+- [Browser Support](#browser-support)
+- [Known Limitations](#known-limitations)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [Credits](#credits)
+
+---
+
+## Features
+
+- **Responsive layout** that adapts from 320px phones to large desktop displays, in portrait and landscape
+- **Mobile navigation** with a hamburger menu below 1180px
+- **Live game search and genre filters** on the Games and Genre pages
+- **Scroll-reveal animations** and animated statistics counters
+- **Light and dark themes**, with the choice saved between visits
+- **3D ambient background** and interactive 3D hover effects on game cards (Three.js)
+- **Preloader and shutter transition**, which also reacts when the user leaves or returns to the tab
+- **Accessible markup** with ARIA labels, keyboard focus styles, and reduced-motion support
+
+---
 
 ## Pages
 
-| File               | Purpose                                                |
-| ------------------ | ------------------------------------------------------ |
-| `index.html`       | Redirects to `pages/home.html`                         |
-| `pages/home.html`  | Landing page: hero, marquee, stats, featured titles    |
-| `pages/games.html` | Full game list with live search and genre filters      |
-| `pages/genre.html` | Genre overview panels plus the same search and filters |
-| `pages/about.html` | Studio story, pillars, stats and team section          |
-| `pages/help.html`  | FAQ accordion and contact form                         |
+| Page  | File               | Description                                             |
+| ----- | ------------------ | ------------------------------------------------------- |
+| Home  | `pages/home.html`  | Hero, brand marquee, studio statistics, featured titles |
+| Games | `pages/games.html` | Full game catalogue with search and genre filters       |
+| Genre | `pages/genre.html` | Genre overview with the same search and filters         |
+| About | `pages/about.html` | Studio story, core values, statistics, team             |
+| Help  | `pages/help.html`  | FAQ accordion and contact form                          |
 
-## Folder structure
+`index.html` at the root redirects to `pages/home.html`.
+
+---
+
+## Project Structure
 
 ```
 .
-├── index.html
+├── index.html               # Entry point, redirects to pages/home.html
 ├── README.md
 ├── css/
-│   ├── style.css        # Base design system, components and original breakpoints
-│   ├── pages.css        # Page-hero, FAQ and genre-panel styles
-│   └── responsive.css   # Responsive layer. Loads last and overrides layout per screen size
+│   ├── style.css            # Design tokens, base styles, core components
+│   ├── pages.css            # Page header, FAQ, and genre panel styles
+│   └── responsive.css       # Responsive layer, loaded last
 ├── js/
-│   ├── main.js          # Preloader and shutter, theme toggle, filters, nav, scroll reveal, counters, form
-│   └── three-bg.js      # Three.js ambient background and 3D card hover scenes
+│   ├── main.js              # Preloader, theme, filters, navigation, reveal, counters, forms
+│   └── three-bg.js          # Three.js ambient scene and card hover scenes
 └── pages/
     ├── home.html
     ├── games.html
@@ -36,58 +70,127 @@ No build step or package manager is needed.
     └── help.html
 ```
 
-## Running locally
+---
 
-Any static file server works. Using Python:
+## Getting Started
+
+### Prerequisites
+
+- A modern web browser
+- An internet connection, for the CDN-hosted dependencies listed below
+- Optional: Python 3, or any other static file server
+
+### Run locally
 
 ```bash
+git clone <repository-url>
 cd hypernerdgames_service_website_built_by_Quadra
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8000` in a browser. The site redirects to `pages/home.html`.
+Open `http://localhost:8000` in your browser. You will be redirected to the home page.
 
-Opening the HTML files directly also works, but a local server is recommended.
+Opening the HTML files directly from the file system also works, but serving them over HTTP is recommended.
 
-**Internet connection required:** the site loads these from CDNs at runtime:
+### External dependencies
 
-- Three.js r128 from `cdnjs.cloudflare.com`
-- Google Fonts (Bebas Neue, DM Sans, Barlow Condensed)
+Loaded at runtime from a CDN:
 
-Without them the 3D background is skipped and fallback fonts are used. The layout still works.
+| Dependency                            | Version | Source                 |
+| ------------------------------------- | ------- | ---------------------- |
+| Three.js                              | r128    | `cdnjs.cloudflare.com` |
+| Bebas Neue, DM Sans, Barlow Condensed | —       | Google Fonts           |
 
-## Responsive design
+If these cannot be reached, the 3D background is skipped and fallback fonts are used. All layout and functionality remain available.
 
-The layout adapts to every screen size, from 320px phones to large desktops, in portrait and landscape.
+---
 
-- **Navigation:** below 1180px the links move into a hamburger menu. On phones, "Work With Us" appears inside that menu.
-- **Fluid spacing:** a shared `--gutter` variable in `responsive.css` sets the side padding everywhere.
-- **Fluid type:** headings and body text scale with `clamp()`.
-- **Games cards:** horizontal scroll with snap on touch devices. Card width and height adjust to the viewport.
-- **Grids:** stats, team and pillars change column count at 900px and 560px. About and contact stack to one column below 900px.
-- **Touch:** tap targets are at least 44px on touch devices. Inputs use 16px font size to prevent iOS zoom.
-- **Overflow:** no page should scroll sideways. The footer links wrap, and images and SVGs are capped to 100% width.
+## Responsive Design
 
-Breakpoints used: 1180px (menu), 900px (tablet), 560px (phone), 360px (small phone), and landscape height 520px.
+The layout is designed mobile-first and adapts to each viewport:
 
-## Customisation
+| Breakpoint                  | Behaviour                                                              |
+| --------------------------- | ---------------------------------------------------------------------- |
+| `≤ 1180px`                  | Navigation collapses into a hamburger menu                             |
+| `≤ 900px`                   | Two-column stats and team grids; About and Contact stack to one column |
+| `≤ 560px`                   | Single-column layouts, full-width buttons, mobile menu CTA             |
+| `≤ 360px`                   | Compact typography and spacing for small phones                        |
+| `landscape, height ≤ 520px` | Reduced hero spacing                                                   |
 
-- **Colours and fonts:** edit the `:root` variables at the top of `css/style.css`.
-- **Gutter and breakpoints:** edit `--gutter` and `--nav-break` in `css/responsive.css`.
-- **Games:** each game is a `.game-card` block in `pages/games.html`, `pages/genre.html` and `pages/home.html`. Set `data-title` and `data-genre` (`rpg`, `sci-fi` or `action`) so search and filters work. Add a matching filter button if you add a new genre.
-- **Team:** edit the `.member` blocks in `pages/about.html`.
-- **Light and dark theme:** the choice is saved in `localStorage` under the key `hn-theme`.
+Additional details:
 
-## Known limitations
+- A shared `--gutter` variable controls horizontal padding across all sections.
+- Headings and body text scale with `clamp()`.
+- On touch devices, tap targets are at least 44px and form inputs use a 16px font size to prevent automatic zoom on iOS.
+- Game cards scroll horizontally with snap alignment on touch screens.
+- No page should scroll horizontally at any supported width.
 
-- **Contact form is a demo.** `handleForm()` in `js/main.js` only shows a toast message and does not send anything. Connect it to a backend or email service before going live.
-- **Placeholder links.** The "Explore" links on game cards and the footer social links (`href="#"`) are placeholders. Replace them with real URLs.
-- **Stats and team data** are placeholder content.
+All responsive rules live in `css/responsive.css`.
 
-## Browser support
+---
 
-Modern Chrome, Edge, Firefox and Safari on desktop and mobile. WebGL is needed for the 3D background. If it is missing, the rest of the site still works.
+## Configuration and Customisation
+
+| What to change                   | Where                                                                            |
+| -------------------------------- | -------------------------------------------------------------------------------- |
+| Brand colours and typefaces      | `:root` variables at the top of `css/style.css`                                  |
+| Gutter width and menu breakpoint | `--gutter` and `--nav-break` in `css/responsive.css`                             |
+| Game cards                       | `.game-card` blocks in `pages/home.html`, `pages/games.html`, `pages/genre.html` |
+| Team members                     | `.member` blocks in `pages/about.html`                                           |
+| FAQ entries                      | `<details>` blocks in `pages/help.html`                                          |
+
+### Adding a game
+
+1. Copy an existing `.game-card` block into the games and genre pages.
+2. Set `data-title` to the game name and `data-genre` to one of `rpg`, `sci-fi`, or `action`.
+3. If you add a new genre, also add a matching `.filter-btn` with the same `data-filter` value.
+
+### Theme persistence
+
+The selected theme is stored in `localStorage` under the key `hn-theme`.
+
+---
+
+## Browser Support
+
+| Browser                                           | Support |
+| ------------------------------------------------- | ------- |
+| Chrome, Edge (current and previous major version) | Full    |
+| Firefox (current)                                 | Full    |
+| Safari, iOS Safari (current)                      | Full    |
+
+The 3D effects require WebGL. Where WebGL is unavailable, the site falls back to its static design.
+
+---
+
+## Known Limitations
+
+- **Contact form is a demo.** `handleForm()` in `js/main.js` only displays a confirmation message. It does not send data. Connect it to a backend or email service before launch.
+- **Placeholder links.** Game "Explore" links and footer social links currently use `href="#"`.
+- **Placeholder content.** Statistics, team members, and game descriptions should be replaced with final content.
+
+---
+
+## Roadmap
+
+- Connect the contact form to a real delivery service
+- Replace placeholder links and content with production data
+- Add per-game detail pages
+- Add an accessibility audit and fix any findings
+- Consider self-hosting fonts and Three.js to remove third-party runtime dependencies
+
+---
+
+## Contributing
+
+1. Create a feature branch from `main`.
+2. Make focused changes. Follow the existing naming and code style.
+3. Test at least one phone-sized and one desktop-sized viewport, in both themes.
+4. Use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages, for example `fix(games): ...` or `feat(css): ...`.
+5. Open a pull request with a short description and screenshots for visual changes.
+
+---
 
 ## Credits
 
-Built by Quadra for HypernerdGames.
+Designed and built by **Quadra** for **HypernerdGames**.
