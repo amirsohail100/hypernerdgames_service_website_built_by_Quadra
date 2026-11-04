@@ -1,8 +1,18 @@
-# HypernerdGames Website
+<p align="center">
+  <img src="<QUADRA_LOGO_PATH>" alt="Quadra logo" width="180">
+</p>
 
-[![Static Site](https://img.shields.io/badge/type-static%20site-0f0d0d?style=flat-square)](#getting-started)
-[![No Build Step](https://img.shields.io/badge/build-none-D90037?style=flat-square)](#getting-started)
-[![License](https://img.shields.io/badge/license-proprietary-7A706B?style=flat-square)](#license)
+<p align="center">
+  <img src="<HYPERNERDGAMES_LOGO_PATH>" alt="HypernerdGames logo" width="320">
+</p>
+
+<h1 align="center">HypernerdGames Website</h1>
+
+<p align="center">
+  <a href="#getting-started"><img src="https://img.shields.io/badge/type-static%20site-0f0d0d?style=flat-square" alt="Static site"></a>
+  <a href="#getting-started"><img src="https://img.shields.io/badge/build-none-D90037?style=flat-square" alt="No build step"></a>
+  <a href="#license"><img src="https://img.shields.io/badge/license-proprietary-7A706B?style=flat-square" alt="License"></a>
+</p>
 
 The official website of **HypernerdGames**, an independent game studio. The site introduces the studio, showcases its game portfolio, provides a genre overview, presents the team, and offers a contact form.
 
@@ -13,6 +23,7 @@ The project is a dependency-free static front end written in HTML, CSS and vanil
 ## Table of Contents
 
 - [Highlights](#highlights)
+- [UI Showcase](#ui-showcase)
 - [Pages](#pages)
 - [Architecture](#architecture)
 - [Project Structure](#project-structure)
@@ -40,6 +51,30 @@ The project is a dependency-free static front end written in HTML, CSS and vanil
 - **Three.js ambient background** and interactive 3D hover effects on game cards
 - **Preloader and tab-aware shutter transition**
 - **Reduced-motion support** via the `prefers-reduced-motion` media query
+
+---
+
+## UI Showcase
+
+<!-- Replace each <UI_IMAGE_N_PATH> with the exact path to the image in the assets folder. -->
+
+<p align="center">
+  <img src="<UI_IMAGE_1_PATH>" alt="<UI_IMAGE_1_ALT>" width="900">
+  <br>
+  <em><UI_IMAGE_1_CAPTION></em>
+</p>
+
+<p align="center">
+  <img src="<UI_IMAGE_2_PATH>" alt="<UI_IMAGE_2_ALT>" width="900">
+  <br>
+  <em><UI_IMAGE_2_CAPTION></em>
+</p>
+
+<p align="center">
+  <img src="<UI_IMAGE_3_PATH>" alt="<UI_IMAGE_3_ALT>" width="900">
+  <br>
+  <em><UI_IMAGE_3_CAPTION></em>
+</p>
 
 ---
 
@@ -74,7 +109,7 @@ The site is organised into three layers, each loaded in a fixed order on every p
 
 **`main.js`** handles the preloader and shutter, theme switching, the custom cursor, navigation state, scroll reveal (`IntersectionObserver`), statistics counters, card tilt, filtering, the toast notification, and the back-to-top button.
 
-**`three-bg.js`** is an isolated module that runs only when Three.js is available. It renders the scroll-linked background and lazily creates a small 3D scene the first time a game card is hovered. It is skipped entirely on touch devices and when reduced motion is requested.
+**`three-bg.js`** is an isolated module that runs only when Three.js is available. It renders the scroll-linked background and lazily creates a small 3D scene the first time a game card is hovered. It is skipped on touch devices and when reduced motion is requested.
 
 **`responsive.css`** contains all breakpoint logic. Shared values such as the side gutter are defined once as CSS custom properties.
 
@@ -86,6 +121,7 @@ The site is organised into three layers, each loaded in a fixed order on every p
 .
 ├── index.html               # Entry point, redirects to pages/home.html
 ├── README.md
+├── assets/                  # Logos and UI images used in this README and the site
 ├── css/
 │   ├── style.css            # Design tokens, base styles, core components
 │   ├── pages.css            # Page header, FAQ, genre panel styles
@@ -139,7 +175,7 @@ If these cannot be reached, the 3D effects are skipped and fallback fonts are us
 Because the site is fully static, it can be hosted on any static platform, such as GitHub Pages, Netlify, Vercel, Cloudflare Pages, or a standard web server.
 
 - **Publish the repository root.** The root `index.html` handles the redirect to the home page.
-- **Use HTTPS** so that the CDN resources and any future form integration load without warnings.
+- **Use HTTPS** so that CDN resources and any future form integration load without warnings.
 - **Before going live,** complete the items under [Known Limitations](#known-limitations).
 
 ---
@@ -213,7 +249,7 @@ Targeted at the current and previous major versions of Chrome, Edge, Firefox, Sa
 - **Contact form is a demo.** `handleForm()` in `js/main.js` shows a confirmation message but does not send any data. Connect it to a backend or email service before launch.
 - **Placeholder links.** Game "Explore" links and footer social links use `href="#"`.
 - **Placeholder content.** Statistics, team members and game descriptions need to be replaced with final content.
-- **Unpinned fonts from CDN.** Google Fonts are loaded at runtime. Self-hosting them would remove this dependency.
+- **Runtime CDN dependencies.** Google Fonts and Three.js are loaded at runtime. Self-hosting them would remove this dependency.
 
 ---
 
@@ -248,4 +284,4 @@ All rights reserved. This code is proprietary to HypernerdGames. Please contact 
 
 ## Credits
 
-Designed and built by **Quadra** for **HypernerdGames**.
+Website designed by **<YOUR_NAME>**, Co-owner, **Quadra**, for **HypernerdGames**.
