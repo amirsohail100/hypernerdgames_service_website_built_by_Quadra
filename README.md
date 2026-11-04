@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="<QUADRA_LOGO_PATH>" alt="Quadra logo" width="180">
+  <img src="assets/icon/quadra-logo.png" alt="Quadra logo" width="180">
 </p>
 
 <p align="center">
-  <img src="<HYPERNERDGAMES_LOGO_PATH>" alt="HypernerdGames logo" width="320">
+  <img src="assets/icon/hypernerdgames-logo.png" alt="HypernerdGames logo" width="320">
 </p>
 
 <h1 align="center">HypernerdGames Website</h1>
@@ -56,24 +56,30 @@ The project is a dependency-free static front end written in HTML, CSS and vanil
 
 ## UI Showcase
 
-<!-- Replace each <UI_IMAGE_N_PATH> with the exact path to the image in the assets folder. -->
+<!-- Replace each placeholder with the exact path to the image in assets/UI. -->
 
 <p align="center">
-  <img src="<UI_IMAGE_1_PATH>" alt="<UI_IMAGE_1_ALT>" width="900">
+  <img src="assets/UI/UI_1.png" alt="UI 1" width="900">
   <br>
-  <em><UI_IMAGE_1_CAPTION></em>
+  <em>UI 1 Caption</em>
 </p>
 
 <p align="center">
-  <img src="<UI_IMAGE_2_PATH>" alt="<UI_IMAGE_2_ALT>" width="900">
+  <img src="assets/UI/UI_2.png" alt="UI 2" width="900">
   <br>
-  <em><UI_IMAGE_2_CAPTION></em>
+  <em>UI 2 Caption</em>
 </p>
 
 <p align="center">
-  <img src="<UI_IMAGE_3_PATH>" alt="<UI_IMAGE_3_ALT>" width="900">
+  <img src="assets/UI/UI_3.png" alt="UI 3" width="900">
   <br>
-  <em><UI_IMAGE_3_CAPTION></em>
+  <em>UI 3 Caption</em>
+</p>
+
+<p align="center">
+  <img src="assets/UI/UI_4.png" alt="UI 4" width="900">
+  <br>
+  <em>UI 4 Caption</em>
 </p>
 
 ---
@@ -121,7 +127,10 @@ The site is organised into three layers, each loaded in a fixed order on every p
 .
 ├── index.html               # Entry point, redirects to pages/home.html
 ├── README.md
-├── assets/                  # Logos and UI images used in this README and the site
+├── assets/
+│   ├── icon/                # Studio logos (HNG and Quadra), SVG
+│   ├── image/               # General images
+│   └── UI/                  # UI screenshots used in the showcase
 ├── css/
 │   ├── style.css            # Design tokens, base styles, core components
 │   ├── pages.css            # Page header, FAQ, genre panel styles
@@ -284,4 +293,4 @@ All rights reserved. This code is proprietary to HypernerdGames. Please contact 
 
 ## Credits
 
-Website designed by **<YOUR_NAME>**, Co-owner, **Quadra**, for **HypernerdGames**.
+Website designed by **Amir Sohail**, Co-owner, **Quadra**, for **HypernerdGames**.
