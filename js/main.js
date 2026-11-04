@@ -1,20 +1,47 @@
 
-// PRELOADER + SHUTTER (the same shutter also closes and reopens when the user returns to this tab)
+// PRELOADER + SHUTTER
+// The shutter drops when the user leaves (tab switch or window blur) and rolls back up when they return.
+// Guards keep it from re-opening twice when focus and visibility events fire together.
 const pl = document.getElementById('preloader');
+let shutterState = 'open';   // 'open' | 'closed' | 'opening'
 let shutterTimer, hideTimer;
+
 window.addEventListener('load', () => {
   pl.classList.add('done');
-  setTimeout(() => { pl.style.display = 'none'; }, 2850);
+  setTimeout(() => { if (shutterState === 'open') pl.style.display = 'none'; }, 2850);
 });
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState !== 'visible' || !pl) return;
+
+function shutterDown() {
+  if (!pl || shutterState === 'closed') return;
+  shutterState = 'closed';
   clearTimeout(shutterTimer); clearTimeout(hideTimer);
   pl.style.display = '';
-  pl.classList.remove('done', 'reopen');   // shutter lands fully closed
-  void pl.offsetWidth;                     // restart the animation
-  shutterTimer = setTimeout(() => pl.classList.add('reopen'), 350);
-  hideTimer = setTimeout(() => { pl.style.display = 'none'; pl.classList.remove('reopen'); }, 1500);
+  pl.classList.remove('done', 'reopen');
+  pl.classList.remove('closing'); void pl.offsetWidth;
+  pl.classList.add('closing');             // visible drop when the page is still on screen
+}
+
+function shutterUp() {
+  if (!pl || shutterState !== 'closed') return;
+  shutterState = 'opening';
+  clearTimeout(shutterTimer); clearTimeout(hideTimer);
+  shutterTimer = setTimeout(() => {
+    pl.classList.remove('closing'); void pl.offsetWidth;
+    pl.classList.add('reopen');
+    hideTimer = setTimeout(() => {
+      pl.style.display = 'none';
+      pl.classList.remove('reopen');
+      shutterState = 'open';
+    }, 900);
+  }, 350);
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') shutterDown();
+  else shutterUp();
 });
+window.addEventListener('blur', shutterDown);
+window.addEventListener('focus', shutterUp);
 
 // CURSOR
 const cur = document.getElementById('cur'), trail = document.getElementById('cur-trail');
