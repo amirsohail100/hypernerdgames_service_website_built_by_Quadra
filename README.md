@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="<QUADRA_LOGO_PATH>" alt="Quadra logo" width="180">
+    <img src="assets/icon/quadra-logo.svg" alt="Quadra logo" width="180">
 </p>
 
 <p align="center">
-  <img src="<HYPERNERDGAMES_LOGO_PATH>" alt="HypernerdGames logo" width="320">
+    <img src="assets/icon/HNG_logo.svg" alt="HypernerdGames logo" width="320">
 </p>
 
 <h1 align="center">HypernerdGames Website</h1>
