@@ -1,0 +1,1 @@
+"""HypernerdGames FastAPI application package."""
