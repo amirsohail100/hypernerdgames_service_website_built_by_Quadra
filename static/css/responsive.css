@@ -242,3 +242,18 @@ footer {
   .stat-num { font-size: 2.4rem; }
   .f-brand { font-size: 1.4rem; }
 }
+
+/* ---------- 12. Header login link ---------- */
+.nav-login {
+  color: var(--muted, #b9b1ab);
+  text-decoration: none;
+  font-size: .72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 10px 6px;
+  transition: color .2s;
+}
+.nav-login:hover, .nav-login:focus-visible { color: var(--ink, #f4f1ee); }
+@media (max-width: 560px) {
+  .nav-login { display: none; }   /* Login and Get Started are in the menu on phones */
+}
