@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Login | HypernerdGames</title>
+  <link rel="stylesheet" href="../css/auth.css">
+</head>
+<body class="auth-page" data-mode="login">
+  <main class="auth-stage">
+    <section class="auth-card" aria-labelledby="auth-title">
+      <a class="auth-brand" href="home.html">HYPERNERD<span>GAMES</span></a>
+      <h1 id="auth-title">Login</h1>
+
+      <p id="auth-status" class="auth-status error" role="alert" hidden></p>
+
+      <form id="auth-form" novalidate>
+        <label class="auth-field">
+          <span>Email</span>
+          <input name="email" type="email" autocomplete="email" required>
+        </label>
+        <label class="auth-field">
+          <span>Password</span>
+          <input name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <div class="auth-row">
+          <label class="auth-check">
+            <input name="remember" type="checkbox" checked>
+            Remember me
+          </label>
+          <a class="auth-link" href="#">Forgot password?</a>
+        </div>
+        <button id="auth-submit" class="auth-btn primary" type="submit">Login</button>
+      </form>
+
+      <div class="auth-divider"><span>or</span></div>
+
+      <div class="auth-social">
+        <div id="google-btn" class="auth-google-slot"></div>
+        <button id="ms-btn" class="auth-btn social" type="button">Continue with Microsoft</button>
+      </div>
+
+      <p class="auth-switch">Don't have an account? <a href="signup.html">Sign up</a></p>
+    </section>
+  </main>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../js/auth-config.js"></script>
+  <script src="../js/auth.js"></script>
+</body>
+</html>

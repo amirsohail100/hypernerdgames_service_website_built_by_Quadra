@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sign up | HypernerdGames</title>
+  <link rel="stylesheet" href="../css/auth.css">
+</head>
+<body class="auth-page" data-mode="signup">
+  <main class="auth-stage">
+    <section class="auth-card" aria-labelledby="auth-title">
+      <a class="auth-brand" href="home.html">HYPERNERD<span>GAMES</span></a>
+      <h1 id="auth-title">Sign up</h1>
+
+      <p id="auth-status" class="auth-status error" role="alert" hidden></p>
+
+      <form id="auth-form" novalidate>
+        <label class="auth-field">
+          <span>Name</span>
+          <input name="name" type="text" autocomplete="name" required minlength="2" maxlength="120">
+        </label>
+        <label class="auth-field">
+          <span>Email</span>
+          <input name="email" type="email" autocomplete="email" required>
+        </label>
+        <label class="auth-field">
+          <span>Password</span>
+          <input name="password" type="password" autocomplete="new-password" required minlength="8">
+        </label>
+        <label class="auth-field">
+          <span>Confirm password</span>
+          <input name="confirm" type="password" autocomplete="new-password" required minlength="8">
+        </label>
+        <button id="auth-submit" class="auth-btn primary" type="submit">Create account</button>
+      </form>
+
+      <div class="auth-divider"><span>or</span></div>
+
+      <div class="auth-social">
+        <div id="google-btn" class="auth-google-slot"></div>
+        <button id="ms-btn" class="auth-btn social" type="button">Continue with Microsoft</button>
+      </div>
+
+      <p class="auth-switch">Already have an account? <a href="login.html">Login</a></p>
+    </section>
+  </main>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../js/auth-config.js"></script>
+  <script src="../js/auth.js"></script>
+</body>
+</html>
