@@ -1,9 +1,9 @@
 <p align="center">
-    <img src="assets/icon/quadra-logo.svg" alt="Quadra logo" width="180">
+  <img src="assets/icon/quadra-logo.svg" alt="Quadra logo" width="180">
 </p>
 
 <p align="center">
-    <img src="assets/icon/HNG_logo.svg" alt="HypernerdGames logo" width="320">
+  <img src="assets/icon/HNG_logo.svg" alt="HypernerdGames logo" width="320">
 </p>
 
 <h1 align="center">HypernerdGames Website</h1>
@@ -59,40 +59,40 @@ The project is a dependency-free static front end written in HTML, CSS and vanil
 <!-- Replace each placeholder with the exact path to the image in assets/UI. -->
 
 <p align="center">
-  <img src="<UI_1_PATH>" alt="<UI_1_ALT>" width="900">
+  <img src="assets/UI/UI_1.png" alt="UI 1" width="900">
   <br>
-  <em><UI_1_CAPTION></em>
+  <em>UI 1 Caption</em>
 </p>
 
 <p align="center">
-  <img src="<UI_2_PATH>" alt="<UI_2_ALT>" width="900">
+  <img src="assets/UI/UI_2.png" alt="UI 2" width="900">
   <br>
-  <em><UI_2_CAPTION></em>
+  <em>UI 2 Caption</em>
 </p>
 
 <p align="center">
-  <img src="<UI_3_PATH>" alt="<UI_3_ALT>" width="900">
+  <img src="assets/UI/UI_3.png" alt="UI 3" width="900">
   <br>
-  <em><UI_3_CAPTION></em>
+  <em>UI 3 Caption</em>
 </p>
 
 <p align="center">
-  <img src="<UI_4_PATH>" alt="<UI_4_ALT>" width="900">
+  <img src="assets/UI/UI_4.png" alt="UI 4" width="900">
   <br>
-  <em><UI_4_CAPTION></em>
+  <em>UI 4 Caption</em>
 </p>
 
 ---
 
 ## Pages
 
-| Page | File | Description |
-|------|------|-------------|
-| Home | `pages/home.html` | Hero, brand marquee, studio statistics, featured titles |
-| Games | `pages/games.html` | Full catalogue with search and genre filters |
-| Genre | `pages/genre.html` | Genre overview with the same search and filters |
-| About | `pages/about.html` | Studio story, core values, statistics, team |
-| Help | `pages/help.html` | FAQ accordion and contact form |
+| Page  | File               | Description                                             |
+| ----- | ------------------ | ------------------------------------------------------- |
+| Home  | `pages/home.html`  | Hero, brand marquee, studio statistics, featured titles |
+| Games | `pages/games.html` | Full catalogue with search and genre filters            |
+| Genre | `pages/genre.html` | Genre overview with the same search and filters         |
+| About | `pages/about.html` | Studio story, core values, statistics, team             |
+| Help  | `pages/help.html`  | FAQ accordion and contact form                          |
 
 The root `index.html` redirects to `pages/home.html`.
 
@@ -170,10 +170,10 @@ Opening the HTML files directly from the file system also works, but serving ove
 
 ### External dependencies
 
-| Dependency | Version | Source | Used for |
-|------------|---------|--------|----------|
-| Three.js | r128 | `cdnjs.cloudflare.com` | Ambient background and card 3D effects |
-| Bebas Neue, DM Sans, Barlow Condensed | — | Google Fonts | Typography |
+| Dependency                            | Version | Source                 | Used for                               |
+| ------------------------------------- | ------- | ---------------------- | -------------------------------------- |
+| Three.js                              | r128    | `cdnjs.cloudflare.com` | Ambient background and card 3D effects |
+| Bebas Neue, DM Sans, Barlow Condensed | —       | Google Fonts           | Typography                             |
 
 If these cannot be reached, the 3D effects are skipped and fallback fonts are used. The layout and all functionality remain available.
 
@@ -193,13 +193,13 @@ Because the site is fully static, it can be hosted on any static platform, such 
 
 The layout is designed mobile-first and adapts to each viewport:
 
-| Breakpoint | Behaviour |
-|------------|-----------|
-| `≤ 1180px` | Navigation collapses into a hamburger menu |
-| `≤ 900px` | Two-column stats; About and Contact stack to one column |
-| `≤ 560px` | Single-column team and forms; full-width buttons; mobile menu CTA |
-| `≤ 360px` | Compact typography and spacing for small phones |
-| Landscape, height `≤ 520px` | Reduced hero spacing |
+| Breakpoint                  | Behaviour                                                         |
+| --------------------------- | ----------------------------------------------------------------- |
+| `≤ 1180px`                  | Navigation collapses into a hamburger menu                        |
+| `≤ 900px`                   | Two-column stats; About and Contact stack to one column           |
+| `≤ 560px`                   | Single-column team and forms; full-width buttons; mobile menu CTA |
+| `≤ 360px`                   | Compact typography and spacing for small phones                   |
+| Landscape, height `≤ 520px` | Reduced hero spacing                                              |
 
 Additional details:
 
@@ -215,13 +215,13 @@ All responsive rules are in `css/responsive.css`.
 
 ## Customisation
 
-| What to change | Where |
-|----------------|-------|
-| Brand colours and typefaces | `:root` variables at the top of `css/style.css` |
-| Gutter width and menu breakpoint | `--gutter` and `--nav-break` in `css/responsive.css` |
-| Game cards | `.game-card` blocks in `pages/home.html`, `pages/games.html`, `pages/genre.html` |
-| Team members | `.member` blocks in `pages/about.html` |
-| FAQ entries | `<details>` blocks in `pages/help.html` |
+| What to change                   | Where                                                                            |
+| -------------------------------- | -------------------------------------------------------------------------------- |
+| Brand colours and typefaces      | `:root` variables at the top of `css/style.css`                                  |
+| Gutter width and menu breakpoint | `--gutter` and `--nav-break` in `css/responsive.css`                             |
+| Game cards                       | `.game-card` blocks in `pages/home.html`, `pages/games.html`, `pages/genre.html` |
+| Team members                     | `.member` blocks in `pages/about.html`                                           |
+| FAQ entries                      | `<details>` blocks in `pages/help.html`                                          |
 
 ### Adding a game
 
@@ -293,4 +293,4 @@ All rights reserved. This code is proprietary to HypernerdGames. Please contact 
 
 ## Credits
 
-Website designed by **<YOUR_NAME>**, Co-owner, **Quadra**, for **HypernerdGames**.
+Website designed by **Amir Sohail**, Co-owner, **Quadra**, for **HypernerdGames**.
